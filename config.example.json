@@ -1,0 +1,33 @@
+{
+    "Dev": {
+       "Stage": "dev",
+ 
+       "DBUsername": "root",
+       "DBPassword": "",
+       "DBHost": "127.0.0.1",
+       "DBName": "probe_22",
+       "DBPort": "3306",
+       "ServerPort": "3000"
+    },
+ 
+    "Docker": {
+       "Stage": "docker",
+       "DbUsername": "probe",
+       "DbPassword": "password",
+       "DbHost": "localhost",
+       "DbName": "probe_22",
+       "DBPort": "3306",
+       "ServerPort": "3000"
+    },
+ 
+    "Prod": {
+       "Stage": "prod",
+ 
+       "DbUsername": "",
+       "DbPassword": "",
+       "DbHost": "",
+       "DbName": "",
+       "DBPort": "",
+       "ServerPort": ""
+    }
+ }

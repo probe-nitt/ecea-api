@@ -1,0 +1,5 @@
+.env
+server
+config.json
+mysql_db
+.vscode
