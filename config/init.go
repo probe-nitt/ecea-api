@@ -6,30 +6,10 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-
 	"github.com/joho/godotenv"
 )
 
-type Config struct {
-	// prod, dev, docker
-	Stage      string
-	ServerPort string
-}
-
-var allConfigurations = struct {
-
-	// Configuration for environment : dev
-	Dev Config
-
-	// Configuration for environment : docker
-	Docker Config
-
-	// Configuration for environment : prod
-	Prod Config
-}{}
-
-var currentConfig Config
-
+// Initialize config
 func InitConfig() {
 	err := godotenv.Load()
 	if err != nil {
@@ -64,8 +44,4 @@ func InitConfig() {
 	default:
 		fmt.Println(color.RedString("Error setting current config"))
 	}
-}
-
-func GetConfig() Config {
-	return currentConfig
 }
