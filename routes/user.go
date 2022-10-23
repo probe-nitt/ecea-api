@@ -1,15 +1,13 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
+	user_controllers "github.com/probe-nitt/probe-server/controllers/user"
 )
 
 func UserRoutes(e *echo.Group) {
 	user := e.Group("/user")
 
-	user.POST("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+	user.POST("/signup", user_controllers.SignupUser)
+	user.POST("/get", user_controllers.GetUser)
 }
