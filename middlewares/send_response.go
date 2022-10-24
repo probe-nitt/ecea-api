@@ -1,4 +1,4 @@
-package utils
+package middlewares
 
 import "github.com/labstack/echo/v4"
 
