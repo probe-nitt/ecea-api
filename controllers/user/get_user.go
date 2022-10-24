@@ -10,7 +10,7 @@ import (
 )
 
 type GetUserRequest struct {
-	Id string `json:"id" validate:"required"`
+	ID string `json:"id" validate:"required"`
 }
 
 type GetUserResponse struct {
@@ -18,7 +18,7 @@ type GetUserResponse struct {
 	Name     string `json:"name"`
 }
 
-func GetUser (c echo.Context) error {
+func GetUser(c echo.Context) error {
 	req := new(GetUserRequest)
 
 	if err := utils.ValidateRequest(c, req); err != nil {
@@ -29,7 +29,7 @@ func GetUser (c echo.Context) error {
 
 	var user models.User
 
-	db.Where("id = ?", req.Id).First(&user)
+	db.Where("id = ?", req.ID).First(&user)
 
 	if user.ID == 0 {
 		return utils.SendResponse(c, http.StatusBadRequest, "User not found")
