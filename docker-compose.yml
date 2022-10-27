@@ -6,7 +6,7 @@ services:
     build: .
     restart: always
     ports:
-      - 3000:3000
+      - ${SERVER_EXTERNAL_PORT}:3000
     depends_on:
       - db
 
@@ -14,11 +14,8 @@ services:
     image: mysql:8
     container_name: mysqldb
     restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: 'probe_22'
-      MYSQL_USER: 'probe'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
+    env_file:
+      - .env
     volumes: 
       - ./docker-mysql-data:/var/lib/mysql
 
@@ -29,4 +26,4 @@ services:
     depends_on:
       - db
     ports:
-      - 8080:80
+      - ${PHPMYADMIN_EXTERNAL_PORT}:80
