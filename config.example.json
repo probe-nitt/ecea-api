@@ -14,7 +14,7 @@
        "Stage": "docker",
        "DbUsername": "probe",
        "DbPassword": "password",
-       "DbHost": "localhost",
+       "DbHost": "db",
        "DbName": "probe_22",
        "DBPort": "3306",
        "ServerPort": "3000"

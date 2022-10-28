@@ -38,7 +38,7 @@ func ConnectDB() {
 	})
 
 	if err != nil {
-		fmt.Println(color.RedString("Error connecting to database"))
+		fmt.Println(color.RedString("Error connecting to database", err))
 	} else {
 		fmt.Println(color.GreenString("Database connected"))
 	}

@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/probe-nitt/probe-server/config"
 	"github.com/probe-nitt/probe-server/database"
+	"github.com/probe-nitt/probe-server/middlewares"
 	"github.com/probe-nitt/probe-server/models"
 	"github.com/probe-nitt/probe-server/routes"
 	"github.com/probe-nitt/probe-server/utils"
@@ -23,7 +24,7 @@ func main() {
 
 	// Create and Setup Echo Server
 	server := echo.New()
-	utils.InitLogger(server)
+	middlewares.InitLogger(server)
 	utils.InitValidator(server)
 	server.Use(middleware.CORS())
 

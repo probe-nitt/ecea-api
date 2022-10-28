@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/probe-nitt/probe-server/database"
+	"github.com/probe-nitt/probe-server/middlewares"
 	"github.com/probe-nitt/probe-server/models"
 	"github.com/probe-nitt/probe-server/utils"
 )
@@ -19,7 +20,7 @@ func SignupUser(c echo.Context) error {
 	var req SignupRequest
 
 	if err := utils.ValidateRequest(c, req); err != nil {
-		return utils.SendResponse(c, http.StatusBadRequest, "Invalid request")
+		return middlewares.SendResponse(c, http.StatusBadRequest, "Invalid request")
 	}
 
 	newUser := models.User{
@@ -31,8 +32,8 @@ func SignupUser(c echo.Context) error {
 	db := database.GetDB()
 
 	if err := db.Create(&newUser).Error; err != nil {
-		return utils.SendResponse(c, http.StatusBadRequest, "User already exists")
+		return middlewares.SendResponse(c, http.StatusBadRequest, "User already exists")
 	}
 
-	return utils.SendResponse(c, http.StatusOK, "User created successfully")
+	return middlewares.SendResponse(c, http.StatusOK, "User created successfully")
 }
