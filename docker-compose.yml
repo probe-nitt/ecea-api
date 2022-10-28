@@ -1,29 +1,28 @@
 version: '3.9'
 
 services:
-  app:
+  probe_server:
     image: probe-22-server
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     ports:
       - ${SERVER_EXTERNAL_PORT}:3000
     depends_on:
-      - db
+      - probe_db
 
-  db:
-    image: mysql:8
-    container_name: mysqldb
-    restart: unless-stopped
+  probe_db:
+    image: postgres
+    restart: always
     env_file:
       - .env
-    volumes: 
-      - ./docker-mysql-data:/var/lib/mysql
+    volumes:
+      - ./pg_db:/data/postgres
 
-  phpmyadmin:
-    image: phpmyadmin
-    container_name: phpmyadmin
+  authadminer:
+    container_name: "adminer_authdb"
+    image: adminer
     restart: always
-    depends_on:
-      - db
     ports:
-      - ${PHPMYADMIN_EXTERNAL_PORT}:80
+      - ${ADMINER_PORT}:8080
