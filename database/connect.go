@@ -6,7 +6,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/probe-nitt/probe-server/config"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -19,21 +19,21 @@ func ConnectDB() {
 	var err error
 
 	// using strings.Builder to build the connection string
-	var connectionString strings.Builder
+	var connString strings.Builder
 
-	connectionString.WriteString(config.DBUsername)
-	connectionString.WriteString(":")
-	connectionString.WriteString(config.DBPassword)
-	connectionString.WriteString("@tcp(")
-	connectionString.WriteString(config.DBHost)
-	connectionString.WriteString(":")
-	connectionString.WriteString(config.DBPort)
-	connectionString.WriteString(")/")
-	connectionString.WriteString(config.DBName)
-	connectionString.WriteString("?charset=utf8mb4&parseTime=True&loc=Local")
+	connString.WriteString("host=")
+	connString.WriteString(config.DBHost)
+	connString.WriteString(" user=")
+	connString.WriteString(config.DBUsername)
+	connString.WriteString(" password=")
+	connString.WriteString(config.DBPassword)
+	connString.WriteString(" dbname=")
+	connString.WriteString(config.DBName)
+	connString.WriteString(" port=")
+	connString.WriteString(config.DBPort)
 
-	// connect to db
-	db, err = gorm.Open(mysql.Open(connectionString.String()), &gorm.Config{
+	// connecting to the database
+	db, err = gorm.Open(postgres.Open(connString.String()), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 
