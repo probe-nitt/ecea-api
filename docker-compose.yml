@@ -6,11 +6,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: ${TARGET}
     restart: always
     ports:
       - ${SERVER_EXTERNAL_PORT}:3000
     depends_on:
       - probe_db
+    volumes:
+      - .:/app
 
   probe_db:
     image: postgres
