@@ -6,4 +6,4 @@ until nc -z -v -w30 probe_db 5432; do
 done
 
 echo -e "\e[34m >>> Starting the server \e[97m"
-./server
+$1

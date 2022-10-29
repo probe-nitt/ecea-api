@@ -9,9 +9,22 @@ COPY . .
 
 RUN go build -o server
 
-# ------------------- SERVE STAGE ------------------- #
+# ------------------- DEV ------------------- #
 
-FROM alpine:latest
+FROM builder AS dev
+
+WORKDIR /app
+
+RUN apk add --no-cache make
+
+RUN go install github.com/cespare/reflex@latest
+
+ENTRYPOINT ["./scripts/docker-entry.sh"]
+CMD ["make watch"]
+
+# ------------------- PROD ------------------- #
+
+FROM alpine:latest as prod
 WORKDIR /app
 
 COPY --from=builder /app/server .
@@ -19,8 +32,5 @@ COPY --from=builder /app/config.json .
 COPY --from=builder /app/.env .
 COPY --from=builder /app/scripts/docker-entry.sh .
 
-RUN chmod +x docker-entry.sh
-
-EXPOSE 3000
-
-CMD ["sh", "docker-entry.sh"]
+ENTRYPOINT ["./scripts/docker-entry.sh"]
+CMD ["./server"]
