@@ -1,0 +1,11 @@
+database
+static
+.github
+.githooks
+docker-compose.yml
+server
+Dockerfile
+.vscode
+.env.example
+.gitignore
+.golangci.yaml

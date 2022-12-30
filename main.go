@@ -1,36 +1,26 @@
 package main
 
 import (
+	"github.com/ecea-nitt/ecea-server/config"
+	"github.com/ecea-nitt/ecea-server/registry"
+	"github.com/ecea-nitt/ecea-server/router"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/probe-nitt/probe-server/config"
-	"github.com/probe-nitt/probe-server/database"
-	"github.com/probe-nitt/probe-server/middlewares"
-	"github.com/probe-nitt/probe-server/models"
-	"github.com/probe-nitt/probe-server/routes"
-	"github.com/probe-nitt/probe-server/utils"
 )
 
 func main() {
 
 	// Load config
-	config.InitConfig()
+	config.InitApp()
 
-	// Connect to database
-	database.ConnectDB()
-
-	// Migrate database
-	models.MigrateDB()
+	// Register app
+	reg := registry.NewRegistry(config.GetDB())
 
 	// Create and Setup Echo Server
 	server := echo.New()
-	middlewares.InitLogger(server)
-	utils.InitValidator(server)
-	server.Use(middleware.CORS())
 
-	// Routes
-	routes.Init(server)
+	// Create Router
+	router.NewRouter(server, reg.NewAppController())
 
-	// Start server
-	server.Logger.Fatal(server.Start(":" + config.GetConfig().ServerPort))
+	// Start Server
+	server.Logger.Fatal(server.Start(":" + config.ServerPort))
 }

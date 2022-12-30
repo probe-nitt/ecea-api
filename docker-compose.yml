@@ -1,30 +1,39 @@
 version: '3.9'
 
 services:
-  probe_server:
-    image: probe-22-server
+  ecea_server:
+    image: ecea-api
+    container_name: ecea-api
     build:
       context: .
       dockerfile: Dockerfile
       target: ${TARGET}
+    environment:
+        - DB_PORT=${POSTGRES_PORT}
+        - DB_HOST=${POSTGRES_HOST}
     restart: always
     ports:
-      - ${SERVER_EXTERNAL_PORT}:3000
+      - ${SERVER_EXTERNAL_PORT}:${SERVER_EXTERNAL_PORT}
     depends_on:
-      - probe_db
+      - ecea_db
     volumes:
       - .:/app
+      - ./static:/static
 
-  probe_db:
+  ecea_db:
     image: postgres
+    container_name: ecea-db
     restart: always
     env_file:
       - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    command: -p ${POSTGRES_PORT}
     volumes:
-      - ./pg_db:/data/postgres
+      - ./database:/data/postgres
 
-  authadminer:
-    container_name: "adminer_authdb"
+  ecea_adminer:
+    container_name: ecea_adminer
     image: adminer
     restart: always
     ports:

@@ -1,8 +1,11 @@
 # ------------------- BUILD STAGE ------------------- #
+
 FROM golang:1.19-alpine AS builder
+
 WORKDIR /app
 
 COPY go.mod go.sum ./
+
 RUN go mod download
 
 COPY . .
@@ -19,18 +22,28 @@ RUN apk add --no-cache make
 
 RUN go install github.com/cespare/reflex@latest
 
-ENTRYPOINT ["./scripts/docker-entry.sh"]
+ENV DB_PORT=5000
+
+ENV DB_HOST=ecea_db
+
+ENTRYPOINT ["./scripts/entry.sh"]
+
 CMD ["make watch"]
 
 # ------------------- PROD ------------------- #
 
-FROM alpine:latest as prod
+FROM alpine:latest AS prod
+
 WORKDIR /app
 
-COPY --from=builder /app/server .
-COPY --from=builder /app/config.json .
-COPY --from=builder /app/.env .
-COPY --from=builder /app/scripts/docker-entry.sh .
+RUN mkdir static
 
-ENTRYPOINT ["./scripts/docker-entry.sh"]
-CMD ["./server"]
+COPY --from=builder /app/server /app/scripts/entry.sh /app/.env  ./
+
+ENV DB_PORT=5000
+
+ENV DB_HOST=ecea_db
+
+ENTRYPOINT ["/app/scripts/entry.sh"]
+
+CMD [ "./server" ]

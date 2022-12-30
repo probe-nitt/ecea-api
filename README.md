@@ -1,4 +1,4 @@
-# Probe-Server
+# ecea-Server
 ___
 
 ### Requirements
@@ -30,10 +30,7 @@ ___
     ``` sh
     git config core.hooksPath .githooks
     ``` 
-* Create config.json and .env files
-    ``` sh
-    cp config.example.json config.json
-    ```
+* Create .env file
     ``` sh
     cp .env.example .env
     ```
@@ -47,8 +44,8 @@ ___
 * Configure database settings in config.json
 
 ### Run
-- #### On Local
+* 
     ``` sh
-    make run
+    docker-compose up
     ```
    

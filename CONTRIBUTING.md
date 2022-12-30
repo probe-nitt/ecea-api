@@ -1,4 +1,4 @@
-## Contributing to Probe-Server
+## Contributing to ecea-Server
 
 Here are the guidelines we'd like you to follow:
 
