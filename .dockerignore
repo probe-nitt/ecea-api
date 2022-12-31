@@ -3,6 +3,7 @@ static
 .github
 .githooks
 docker-compose.yml
+docs
 server
 Dockerfile
 .vscode

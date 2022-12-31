@@ -1,0 +1,86 @@
+definitions:
+  models.Error:
+    properties:
+      code:
+        example: 0
+        type: integer
+      message:
+        example: status
+        type: string
+    type: object
+  models.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  models.RegisterResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API for Probe Application.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Probe API
+  version: "1.0"
+paths:
+  /user/signup:
+    post:
+      consumes:
+      - application/json
+      description: register an user
+      parameters:
+      - description: Add user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Register an user
+      tags:
+      - user
+  /user/verifyemail/{verificationCode}:
+    post:
+      consumes:
+      - application/json
+      description: verify an user by sending email
+      parameters:
+      - description: Verify user
+        in: path
+        name: verificationCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: verify an user
+      tags:
+      - user
+swagger: "2.0"

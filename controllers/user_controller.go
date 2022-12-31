@@ -26,6 +26,17 @@ func NewUserController(us services.UserService, ms services.MailService) UserCon
 	return &userController{us, ms}
 }
 
+// Register godoc
+//
+//	@Summary		Register an user
+//	@Description	register an user
+//	@Tags			user
+//	@Accept					json
+//	@Produce		json
+//	@Param					user	body		models.RegisterRequest	true	"Add user"
+//	@Success		200	{object}	models.RegisterResponse
+//	@Failure		400	{object}	models.Error
+//	@Router			/user/signup [post]
 func (uc *userController) Register(c echo.Context) error {
 	request := new(models.RegisterRequest)
 	if err := c.Bind(request); err != nil {
@@ -66,6 +77,17 @@ func (uc *userController) Register(c echo.Context) error {
 	return middlewares.Responder(c, http.StatusOK, "Check Your Email for verification mail")
 }
 
+// VerifyEmail godoc
+//
+//	@Summary		verify an user
+//	@Description	verify an user by sending email
+//	@Tags			user
+//	@Accept					json
+//	@Produce		json
+//	@Param					verificationCode	path  string true "Verify user"
+//	@Success		200	{object}	string
+//	@Failure		400	{object}	models.Error
+//	@Router			/user/verifyemail/{verificationCode} [post]
 func (uc *userController) VerifyEmail(c echo.Context) error {
 
 	code := c.Param("verificationCode")
