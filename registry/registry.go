@@ -25,5 +25,6 @@ func (r *registry) NewMailService() services.MailService {
 func (r *registry) NewAppController() controllers.AppController {
 	return controllers.AppController{
 		User: r.NewUserController(),
+		Team: r.NewTeamController(),
 	}
 }

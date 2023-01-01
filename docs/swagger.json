@@ -12,7 +12,65 @@
         "version": "1.0"
     },
     "paths": {
-        "/user/signup": {
+        "/v1/team/add": {
+            "post": {
+                "description": "adds a new member to Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "team"
+                ],
+                "summary": "Add a team member",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "role",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "roll_no",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "team",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "member image",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/signup": {
             "post": {
                 "description": "register an user",
                 "consumes": [
@@ -52,7 +110,7 @@
                 }
             }
         },
-        "/user/verifyemail/{verificationCode}": {
+        "/v1/user/verifyemail/{verificationCode}": {
             "post": {
                 "description": "verify an user by sending email",
                 "consumes": [

@@ -32,7 +32,44 @@ info:
   title: Probe API
   version: "1.0"
 paths:
-  /user/signup:
+  /v1/team/add:
+    post:
+      consumes:
+      - multipart/form-data
+      description: adds a new member to Database
+      parameters:
+      - in: formData
+        name: name
+        type: string
+      - in: formData
+        name: role
+        type: string
+      - in: formData
+        name: roll_no
+        type: string
+      - in: formData
+        name: team
+        type: string
+      - description: member image
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Add a team member
+      tags:
+      - team
+  /v1/user/signup:
     post:
       consumes:
       - application/json
@@ -58,7 +95,7 @@ paths:
       summary: Register an user
       tags:
       - user
-  /user/verifyemail/{verificationCode}:
+  /v1/user/verifyemail/{verificationCode}:
     post:
       consumes:
       - application/json

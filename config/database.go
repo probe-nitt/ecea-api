@@ -41,6 +41,11 @@ func MigrateDB() {
 
 	for _, schema := range []interface{}{
 		&schemas.User{},
+		&schemas.AssetType{},
+		&schemas.Asset{},
+		&schemas.Team{},
+		&schemas.Role{},
+		&schemas.Member{},
 	} {
 		if err := db.AutoMigrate(&schema); err != nil {
 			panic(err)
