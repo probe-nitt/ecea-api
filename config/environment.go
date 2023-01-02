@@ -22,6 +22,7 @@ var MailPort int
 var MailHost string
 var MailUser string
 var MailPassword string
+var Admin string
 
 func LoadEnvironment() {
 	err := godotenv.Load()
@@ -29,6 +30,7 @@ func LoadEnvironment() {
 		fmt.Println(color.RedString("Error loading .env"))
 	}
 
+	Admin = os.Getenv("ADMIN")
 	DbHost = os.Getenv("DB_HOST")
 	DbUser = os.Getenv("POSTGRES_USER")
 	DbPassword = os.Getenv("POSTGRES_PASSWORD")

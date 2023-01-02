@@ -21,8 +21,9 @@ func ConnectDB() {
 
 	db, er = gorm.Open(postgres.New(postgres.Config{
 		DSN: dsn,
-	}), &gorm.Config{})
-
+	}), &gorm.Config{
+		// Logger: logger.Default.LogMode(logger.Info),
+	})
 	if er != nil {
 		fmt.Println(color.RedString("Error connecting to database"))
 	} else {
@@ -50,6 +51,6 @@ func MigrateDB() {
 		if err := db.AutoMigrate(&schema); err != nil {
 			panic(err)
 		}
-		fmt.Println("Migration Success")
 	}
+	fmt.Println(color.BlueString("Migration Success"))
 }

@@ -30,7 +30,7 @@ func NewUserController(us services.UserService, ms services.MailService) UserCon
 //
 //	@Summary		Register an user
 //	@Description	register an user
-//	@Tags			user
+//	@Tags			User
 //	@Accept					json
 //	@Produce		json
 //	@Param					user	body		models.RegisterRequest	true	"Add user"
@@ -81,7 +81,7 @@ func (uc *userController) Register(c echo.Context) error {
 //
 //	@Summary		verify an user
 //	@Description	verify an user by sending email
-//	@Tags			user
+//	@Tags			User
 //	@Accept					json
 //	@Produce		json
 //	@Param					verificationCode	path  string true "Verify user"

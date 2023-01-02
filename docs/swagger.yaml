@@ -8,6 +8,47 @@ definitions:
         example: status
         type: string
     type: object
+  models.MemberRoles:
+    enum:
+    - Chairperson
+    - Overall Coordinator(Boys)
+    - Overall Coordinator(Girls)
+    - Treasurer
+    - Head
+    - Deputy Head
+    - Manager
+    - Coordinator
+    type: string
+    x-enum-varnames:
+    - Chairperson
+    - OCBoy
+    - OCGirl
+    - Treasurer
+    - Head
+    - DeputyHead
+    - Manager
+    - Coordinator
+  models.MemberTeams:
+    enum:
+    - Webops
+    - Events
+    type: string
+    x-enum-varnames:
+    - Webops
+    - Events
+  models.Members:
+    properties:
+      image_url:
+        type: string
+      name:
+        type: string
+      role:
+        $ref: '#/definitions/models.MemberRoles'
+      roll_no:
+        type: string
+      team:
+        $ref: '#/definitions/models.MemberTeams'
+    type: object
   models.RegisterRequest:
     properties:
       email:
@@ -23,7 +64,9 @@ definitions:
         type: string
     type: object
 info:
-  contact: {}
+  contact:
+    email: probe.eceanitt@gmail.com
+    name: Probe Webops
   description: API for Probe Application.
   license:
     name: Apache 2.0
@@ -36,21 +79,41 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: adds a new member to Database
+      description: Creates a new member and adds to Database
       parameters:
-      - in: formData
+      - description: Enter name
+        in: formData
         name: name
+        required: true
         type: string
-      - in: formData
+      - description: Enter roll no
+        in: formData
+        name: rollNo
+        required: true
+        type: string
+      - description: Choose a role
+        enum:
+        - Chairperson
+        - Overall Coordinator(Boys)
+        - Overall Coordinator(Girls)
+        - Treasurer
+        - Head
+        - Deputy Head
+        - Manager
+        - Coordinator
+        in: formData
         name: role
+        required: true
         type: string
-      - in: formData
-        name: roll_no
-        type: string
-      - in: formData
+      - description: Choose a team
+        enum:
+        - Webops
+        - Events
+        in: formData
         name: team
+        required: true
         type: string
-      - description: member image
+      - description: Upload Image
         in: formData
         name: image
         required: true
@@ -66,9 +129,224 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
       summary: Add a team member
       tags:
-      - team
+      - Team
+  /v1/team/delete/{rollnumber}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a member and remove form Database
+      parameters:
+      - description: Delete member
+        in: path
+        name: rollnumber
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a team member
+      tags:
+      - Team
+  /v1/team/edit/image:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits a member and updates to Database
+      parameters:
+      - description: Enter roll no
+        in: formData
+        name: rollNo
+        required: true
+        type: string
+      - description: Edit Image
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit a team member's image
+      tags:
+      - Team
+  /v1/team/edit/name:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits a member and updates to Database
+      parameters:
+      - description: Edit name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Enter roll no
+        in: formData
+        name: rollNo
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit a team member's name
+      tags:
+      - Team
+  /v1/team/edit/role:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits a member and updates to Database
+      parameters:
+      - description: Enter roll no
+        in: formData
+        name: rollNo
+        required: true
+        type: string
+      - description: Change role
+        enum:
+        - Chairperson
+        - Overall Coordinator(Boys)
+        - Overall Coordinator(Girls)
+        - Treasurer
+        - Head
+        - Deputy Head
+        - Manager
+        - Coordinator
+        in: formData
+        name: team
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit a team member's team
+      tags:
+      - Team
+  /v1/team/edit/team:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits a member and updates to Database
+      parameters:
+      - description: Enter roll no
+        in: formData
+        name: rollNo
+        required: true
+        type: string
+      - description: Change team
+        enum:
+        - Webops
+        - Events
+        in: formData
+        name: role
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit a team member's role
+      tags:
+      - Team
+  /v1/team/get/{rollnumber}:
+    get:
+      consumes:
+      - application/json
+      description: Fetches a member and remove form Database
+      parameters:
+      - description: Get member
+        in: path
+        name: rollnumber
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Members'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Get a team member
+      tags:
+      - Team
+  /v1/team/getall:
+    get:
+      consumes:
+      - application/json
+      description: Fetches all the team members from Database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Members'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Get all team members
+      tags:
+      - Team
   /v1/user/signup:
     post:
       consumes:
@@ -94,7 +372,7 @@ paths:
             $ref: '#/definitions/models.Error'
       summary: Register an user
       tags:
-      - user
+      - User
   /v1/user/verifyemail/{verificationCode}:
     post:
       consumes:
@@ -119,5 +397,11 @@ paths:
             $ref: '#/definitions/models.Error'
       summary: verify an user
       tags:
-      - user
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    description: Description for what is this security definition being used
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

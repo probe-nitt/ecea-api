@@ -17,7 +17,17 @@ import (
 func NameValidator(s string) (string, error) {
 	var IsLetter = regexp.MustCompile(`^[a-zA-Z ]+$`).MatchString
 	if !IsLetter(s) {
-		return s, fmt.Errorf("Name should not contain numerics")
+		return s, fmt.Errorf("Name should only contain characters")
+	}
+	name := cases.Lower(language.Und).String(s)
+	name = cases.Title(language.Und).String(name)
+	return name, nil
+}
+
+func NumericValidator(s string) (string, error) {
+	var IsLetter = regexp.MustCompile(`^[0-9]+$`).MatchString
+	if !IsLetter(s) {
+		return s, fmt.Errorf("Name should only contain numbers")
 	}
 	name := cases.Lower(language.Und).String(s)
 	name = cases.Title(language.Und).String(name)

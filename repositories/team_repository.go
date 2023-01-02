@@ -1,8 +1,10 @@
 package repositories
 
 import (
+	"github.com/ecea-nitt/ecea-server/models"
 	"github.com/ecea-nitt/ecea-server/schemas"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type teamRepository struct {
@@ -10,14 +12,45 @@ type teamRepository struct {
 }
 
 type TeamRepository interface {
+	FindAllMembers() ([]models.Members, error)
+	FindMemberByRollNo(rollNo string) (schemas.Member, error)
 	FindTeamByName(name string) (uint, error)
 	FindRoleByName(name string) (uint, error)
 	InsertAsset(name string) (uint, error)
+	UpdateAsset(id uint, name string) error
 	InsertMember(member *schemas.Member) error
+	UpdateMember(member *schemas.Member) error
+	DeleteMember(rollNo string) error
+	FindMember(rollNo string) (models.Members, error)
 }
 
 func NewTeamRepository(db *gorm.DB) TeamRepository {
 	return &teamRepository{db}
+}
+
+func (tr *teamRepository) FindAllMembers() ([]models.Members, error) {
+	var members []models.Members
+	if err := tr.db.Table("members").Select(
+		`members.name,
+		 members.roll_no,
+		 roles.name as role,
+		 teams.name as team,
+		 CONCAT('images','/',assets.name) as image_url`,
+	).Joins(
+		"JOIN assets on assets.id = members.asset_id").Joins(
+		"JOIN teams on teams.id = members.team_id").Joins(
+		"JOIN roles on roles.id = members.role_id").Scan(
+		&members).Error; err != nil {
+		return nil, err
+	}
+
+	return members, nil
+}
+
+func (tr *teamRepository) FindMemberByRollNo(rollNo string) (schemas.Member, error) {
+	var member schemas.Member
+	err := tr.db.Preload(clause.Associations).Where("roll_no = ?", rollNo).First(&member).Error
+	return member, err
 }
 
 func (tr *teamRepository) FindTeamByName(name string) (uint, error) {
@@ -38,6 +71,10 @@ func (tr *teamRepository) FindRoleByName(name string) (uint, error) {
 	return role.ID, nil
 }
 
+func (tr *teamRepository) UpdateAsset(id uint, name string) error {
+	return tr.db.Model(&schemas.Asset{AssetTypeID: id}).Update("name", name).Error
+}
+
 func (tr *teamRepository) InsertAsset(name string) (uint, error) {
 	var assetType schemas.AssetType
 	if err := tr.db.Where("name = ?", schemas.Image).First(&assetType).Error; err != nil {
@@ -55,4 +92,30 @@ func (tr *teamRepository) InsertAsset(name string) (uint, error) {
 
 func (tr *teamRepository) InsertMember(member *schemas.Member) error {
 	return tr.db.Create(member).Error
+}
+
+func (tr *teamRepository) UpdateMember(member *schemas.Member) error {
+	return tr.db.Model(&member).Where("id = ?", member.ID).Updates(&member).Error
+}
+
+func (tr *teamRepository) DeleteMember(rollNo string) error {
+	return tr.db.Unscoped().Where("roll_no = ?", rollNo).Delete(&schemas.Member{}).Error
+}
+
+func (tr *teamRepository) FindMember(rollNo string) (models.Members, error) {
+	var member models.Members
+	err := tr.db.Table("members").Select(
+		`members.name,
+		 members.roll_no,
+		 roles.name as role,
+		 teams.name as team,
+		 CONCAT('images','/',assets.name) as image_url`,
+	).Joins(
+		"JOIN assets on assets.id = members.asset_id").Joins(
+		"JOIN teams on teams.id = members.team_id").Joins(
+		"JOIN roles on roles.id = members.role_id").Where(
+		"roll_no = ?", rollNo).First(
+		&member).Error
+
+	return member, err
 }

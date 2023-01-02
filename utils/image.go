@@ -2,9 +2,12 @@ package utils
 
 import (
 	"io"
+	"log"
 	"mime/multipart"
 	"os"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 var ImagePath = "static/images/"
@@ -35,4 +38,15 @@ func UploadImage(file *multipart.FileHeader) (string, error) {
 		return "", err
 	}
 	return fileName, nil
+}
+
+func DeleteImage(fileName string) error {
+
+	path := ImagePath + fileName
+	log.Println(color.MagentaString("Deleting: " + path))
+	e := os.Remove(path)
+	if e != nil {
+		return e
+	}
+	return nil
 }

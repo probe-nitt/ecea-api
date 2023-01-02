@@ -11,7 +11,10 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "termsOfService": "http://swagger.io/terms/",
-        "contact": {},
+        "contact": {
+            "name": "Probe Webops",
+            "email": "probe.eceanitt@gmail.com"
+        },
         "license": {
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -23,7 +26,12 @@ const docTemplate = `{
     "paths": {
         "/v1/team/add": {
             "post": {
-                "description": "adds a new member to Database",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Creates a new member and adds to Database",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -31,33 +39,55 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "team"
+                    "Team"
                 ],
                 "summary": "Add a team member",
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Enter name",
                         "name": "name",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
+                        "description": "Enter roll no",
+                        "name": "rollNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "Chairperson",
+                            "Overall Coordinator(Boys)",
+                            "Overall Coordinator(Girls)",
+                            "Treasurer",
+                            "Head",
+                            "Deputy Head",
+                            "Manager",
+                            "Coordinator"
+                        ],
+                        "type": "string",
+                        "description": "Choose a role",
                         "name": "role",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "enum": [
+                            "Webops",
+                            "Events"
+                        ],
                         "type": "string",
-                        "name": "roll_no",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
+                        "description": "Choose a team",
                         "name": "team",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "file",
-                        "description": "member image",
+                        "description": "Upload Image",
                         "name": "image",
                         "in": "formData",
                         "required": true
@@ -79,6 +109,333 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/team/delete/{rollnumber}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Deletes a member and remove form Database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Team"
+                ],
+                "summary": "Delete a team member",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Delete member",
+                        "name": "rollnumber",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/team/edit/image": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edits a member and updates to Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Team"
+                ],
+                "summary": "Edit a team member's image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter roll no",
+                        "name": "rollNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Edit Image",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/team/edit/name": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edits a member and updates to Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Team"
+                ],
+                "summary": "Edit a team member's name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Edit name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter roll no",
+                        "name": "rollNo",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/team/edit/role": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edits a member and updates to Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Team"
+                ],
+                "summary": "Edit a team member's team",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter roll no",
+                        "name": "rollNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "Chairperson",
+                            "Overall Coordinator(Boys)",
+                            "Overall Coordinator(Girls)",
+                            "Treasurer",
+                            "Head",
+                            "Deputy Head",
+                            "Manager",
+                            "Coordinator"
+                        ],
+                        "type": "string",
+                        "description": "Change role",
+                        "name": "team",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/team/edit/team": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edits a member and updates to Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Team"
+                ],
+                "summary": "Edit a team member's role",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter roll no",
+                        "name": "rollNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "Webops",
+                            "Events"
+                        ],
+                        "type": "string",
+                        "description": "Change team",
+                        "name": "role",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/team/get/{rollnumber}": {
+            "get": {
+                "description": "Fetches a member and remove form Database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Team"
+                ],
+                "summary": "Get a team member",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Get member",
+                        "name": "rollnumber",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Members"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/team/getall": {
+            "get": {
+                "description": "Fetches all the team members from Database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Team"
+                ],
+                "summary": "Get all team members",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Members"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/user/signup": {
             "post": {
                 "description": "register an user",
@@ -89,7 +446,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "User"
                 ],
                 "summary": "Register an user",
                 "parameters": [
@@ -129,7 +486,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "User"
                 ],
                 "summary": "verify an user",
                 "parameters": [
@@ -172,6 +529,60 @@ const docTemplate = `{
                 }
             }
         },
+        "models.MemberRoles": {
+            "type": "string",
+            "enum": [
+                "Chairperson",
+                "Overall Coordinator(Boys)",
+                "Overall Coordinator(Girls)",
+                "Treasurer",
+                "Head",
+                "Deputy Head",
+                "Manager",
+                "Coordinator"
+            ],
+            "x-enum-varnames": [
+                "Chairperson",
+                "OCBoy",
+                "OCGirl",
+                "Treasurer",
+                "Head",
+                "DeputyHead",
+                "Manager",
+                "Coordinator"
+            ]
+        },
+        "models.MemberTeams": {
+            "type": "string",
+            "enum": [
+                "Webops",
+                "Events"
+            ],
+            "x-enum-varnames": [
+                "Webops",
+                "Events"
+            ]
+        },
+        "models.Members": {
+            "type": "object",
+            "properties": {
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/models.MemberRoles"
+                },
+                "roll_no": {
+                    "type": "string"
+                },
+                "team": {
+                    "$ref": "#/definitions/models.MemberTeams"
+                }
+            }
+        },
         "models.RegisterRequest": {
             "type": "object",
             "properties": {
@@ -193,6 +604,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "Description for what is this security definition being used",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

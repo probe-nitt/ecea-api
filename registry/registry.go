@@ -2,7 +2,6 @@ package registry
 
 import (
 	"github.com/ecea-nitt/ecea-server/controllers"
-	"github.com/ecea-nitt/ecea-server/services"
 	"gorm.io/gorm"
 )
 
@@ -18,13 +17,10 @@ func NewRegistry(db *gorm.DB) Registry {
 	return &registry{db}
 }
 
-func (r *registry) NewMailService() services.MailService {
-	return services.NewMailService()
-}
-
 func (r *registry) NewAppController() controllers.AppController {
 	return controllers.AppController{
 		User: r.NewUserController(),
 		Team: r.NewTeamController(),
+		Seed: r.NewSeedController(),
 	}
 }
