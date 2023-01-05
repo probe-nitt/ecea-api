@@ -38,16 +38,16 @@ CMD ["make watch"]
 
 FROM alpine:latest AS prod
 
-WORKDIR /app
+WORKDIR /
 
 RUN mkdir static
 
-COPY --from=builder /app/server /app/scripts/entry.sh /app/.env  ./
+COPY --from=builder /app/server /app/scripts/entry.sh /app/.env  /
 
 ENV DB_PORT=5000
 
 ENV DB_HOST=ecea_db
 
-ENTRYPOINT ["/app/scripts/entry.sh"]
+ENTRYPOINT ["/entry.sh"]
 
 CMD [ "./server" ]

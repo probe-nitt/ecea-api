@@ -44,7 +44,7 @@ definitions:
         type: string
       role:
         $ref: '#/definitions/models.MemberRoles'
-      roll_no:
+      rollnumber:
         type: string
       team:
         $ref: '#/definitions/models.MemberTeams'
@@ -67,12 +67,12 @@ info:
   contact:
     email: probe.eceanitt@gmail.com
     name: Probe Webops
-  description: API for Probe Application.
+  description: Admin Panel for Probe Application.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Probe API
+  title: Probe Admin
   version: "1.0"
 paths:
   /v1/team/add:
@@ -88,7 +88,7 @@ paths:
         type: string
       - description: Enter roll no
         in: formData
-        name: rollNo
+        name: rollnumber
         required: true
         type: string
       - description: Choose a role
@@ -169,7 +169,7 @@ paths:
       parameters:
       - description: Enter roll no
         in: formData
-        name: rollNo
+        name: rollnumber
         required: true
         type: string
       - description: Edit Image
@@ -206,7 +206,7 @@ paths:
         type: string
       - description: Enter roll no
         in: formData
-        name: rollNo
+        name: rollnumber
         required: true
         type: string
       produces:
@@ -233,7 +233,7 @@ paths:
       parameters:
       - description: Enter roll no
         in: formData
-        name: rollNo
+        name: rollnumber
         required: true
         type: string
       - description: Change role
@@ -246,41 +246,6 @@ paths:
         - Deputy Head
         - Manager
         - Coordinator
-        in: formData
-        name: team
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.Error'
-      security:
-      - ApiKeyAuth: []
-      summary: Edit a team member's team
-      tags:
-      - Team
-  /v1/team/edit/team:
-    put:
-      consumes:
-      - multipart/form-data
-      description: Edits a member and updates to Database
-      parameters:
-      - description: Enter roll no
-        in: formData
-        name: rollNo
-        required: true
-        type: string
-      - description: Change team
-        enum:
-        - Webops
-        - Events
         in: formData
         name: role
         required: true
@@ -299,6 +264,41 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Edit a team member's role
+      tags:
+      - Team
+  /v1/team/edit/team:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits a member and updates to Database
+      parameters:
+      - description: Enter roll no
+        in: formData
+        name: rollnumber
+        required: true
+        type: string
+      - description: Change team
+        enum:
+        - Webops
+        - Events
+        in: formData
+        name: team
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit a team member's team
       tags:
       - Team
   /v1/team/get/{rollnumber}:

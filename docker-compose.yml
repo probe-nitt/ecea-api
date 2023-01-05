@@ -32,9 +32,7 @@ services:
     volumes:
       - ./database:/data/postgres
 
-  ecea_adminer:
-    container_name: ecea_adminer
-    image: adminer
-    restart: always
-    ports:
-      - ${ADMINER_PORT}:8080
+networks:
+  default:
+      external:
+        name: thirumathikart_network

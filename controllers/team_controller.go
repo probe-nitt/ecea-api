@@ -92,7 +92,7 @@ func (tc *teamController) GetAllMembers(c echo.Context) error {
 //	@Accept					multipart/form-data
 //	@Produce		json
 //	@Param					name	formData	string	true 	"Enter name"
-//	@Param					rollNo	formData	string	true 	"Enter roll no"
+//	@Param					rollnumber	formData	string	true 	"Enter roll no"
 //	@Param					role	formData	models.MemberRoles	true 	"Choose a role"
 //	@Param					team	formData	models.MemberTeams	true 	"Choose a team"
 //	@Param					image	formData	file	true	"Upload Image"
@@ -130,7 +130,7 @@ func (tc *teamController) AddMember(c echo.Context) error {
 //	@Accept					multipart/form-data
 //	@Produce		json
 //	@Param					name	formData	string	true 	"Edit name"
-//	@Param					rollNo	formData	string	true 	"Enter roll no"
+//	@Param					rollnumber	formData	string	true 	"Enter roll no"
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //	@Security 		ApiKeyAuth
@@ -157,7 +157,7 @@ func (tc *teamController) EditMemberName(c echo.Context) error {
 //	@Tags			Team
 //	@Accept					multipart/form-data
 //	@Produce		json
-//	@Param					rollNo	formData	string	true 	"Enter roll no"
+//	@Param					rollnumber	formData	string	true 	"Enter roll no"
 //	@Param					image	formData	file	true	"Edit Image"
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
@@ -184,15 +184,15 @@ func (tc *teamController) EditMemberImage(c echo.Context) error {
 	return middlewares.Responder(c, http.StatusOK, "Success")
 }
 
-// EditMemberTeam godoc
+// EditMemberRole godoc
 //
-//	@Summary		Edit a team member's team
+//	@Summary		Edit a team member's role
 //	@Description	Edits a member and updates to Database
 //	@Tags			Team
 //	@Accept					multipart/form-data
 //	@Produce		json
-//	@Param					rollNo	formData	string	true 	"Enter roll no"
-//	@Param					team	formData	models.MemberRoles	true	"Change role"
+//	@Param					rollnumber	formData	string	true 	"Enter roll no"
+//	@Param					role	formData	models.MemberRoles	true	"Change role"
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //	@Security 		ApiKeyAuth
@@ -212,15 +212,15 @@ func (tc *teamController) EditMemberRole(c echo.Context) error {
 	return middlewares.Responder(c, http.StatusOK, "Success")
 }
 
-// EditMemberRole godoc
+// EditMemberTeam godoc
 //
-//	@Summary		Edit a team member's role
+//	@Summary		Edit a team member's team
 //	@Description	Edits a member and updates to Database
 //	@Tags			Team
 //	@Accept					multipart/form-data
 //	@Produce		json
-//	@Param					rollNo	formData	string	true 	"Enter roll no"
-//	@Param					role	formData	models.MemberTeams true	"Change team"
+//	@Param					rollnumber	formData	string	true 	"Enter roll no"
+//	@Param					team	formData	models.MemberTeams true	"Change team"
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //	@Security 		ApiKeyAuth

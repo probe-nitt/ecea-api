@@ -8,9 +8,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-//	@title			Probe API
+//	@title			Probe Admin
 //	@version		1.0
-//	@description	API for Probe Application.
+//	@description	Admin Panel for Probe Application.
 
 //	@termsOfService	http://swagger.io/terms/
 

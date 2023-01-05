@@ -2,14 +2,14 @@ package models
 
 type MemberRequest struct {
 	Name   string      `json:"name" form:"name"`
-	RollNo string      `json:"roll_no" form:"roll_no"`
+	RollNo string      `json:"roll_no" form:"rollnumber"`
 	Team   MemberTeams `json:"team" form:"team"`
 	Role   MemberRoles `json:"role" form:"role"`
 }
 
 type Members struct {
 	Name     string      `json:"name"`
-	RollNo   string      `json:"roll_no"`
+	RollNo   string      `json:"rollnumber"`
 	Team     MemberTeams `json:"team"`
 	Role     MemberRoles `json:"role"`
 	ImageURL string      `json:"image_url"`

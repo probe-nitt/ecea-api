@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/ecea-nitt/ecea-server/config"
 	"github.com/ecea-nitt/ecea-server/models"
 	"github.com/ecea-nitt/ecea-server/schemas"
 	"gorm.io/gorm"
@@ -28,25 +29,6 @@ func NewTeamRepository(db *gorm.DB) TeamRepository {
 	return &teamRepository{db}
 }
 
-func (tr *teamRepository) FindAllMembers() ([]models.Members, error) {
-	var members []models.Members
-	if err := tr.db.Table("members").Select(
-		`members.name,
-		 members.roll_no,
-		 roles.name as role,
-		 teams.name as team,
-		 CONCAT('images','/',assets.name) as image_url`,
-	).Joins(
-		"JOIN assets on assets.id = members.asset_id").Joins(
-		"JOIN teams on teams.id = members.team_id").Joins(
-		"JOIN roles on roles.id = members.role_id").Scan(
-		&members).Error; err != nil {
-		return nil, err
-	}
-
-	return members, nil
-}
-
 func (tr *teamRepository) FindMemberByRollNo(rollNo string) (schemas.Member, error) {
 	var member schemas.Member
 	err := tr.db.Preload(clause.Associations).Where("roll_no = ?", rollNo).First(&member).Error
@@ -72,7 +54,7 @@ func (tr *teamRepository) FindRoleByName(name string) (uint, error) {
 }
 
 func (tr *teamRepository) UpdateAsset(id uint, name string) error {
-	return tr.db.Model(&schemas.Asset{AssetTypeID: id}).Update("name", name).Error
+	return tr.db.Model(&schemas.Asset{}).Where("id = ?", id).Update("name", name).Error
 }
 
 func (tr *teamRepository) InsertAsset(name string) (uint, error) {
@@ -105,11 +87,8 @@ func (tr *teamRepository) DeleteMember(rollNo string) error {
 func (tr *teamRepository) FindMember(rollNo string) (models.Members, error) {
 	var member models.Members
 	err := tr.db.Table("members").Select(
-		`members.name,
-		 members.roll_no,
-		 roles.name as role,
-		 teams.name as team,
-		 CONCAT('images','/',assets.name) as image_url`,
+		`members.name,members.roll_no,roles.name as role,teams.name as team,
+		CONCAT(?::text,'/static/images','/',assets.name) as image_url`, config.Origin,
 	).Joins(
 		"JOIN assets on assets.id = members.asset_id").Joins(
 		"JOIN teams on teams.id = members.team_id").Joins(
@@ -118,4 +97,20 @@ func (tr *teamRepository) FindMember(rollNo string) (models.Members, error) {
 		&member).Error
 
 	return member, err
+}
+
+func (tr *teamRepository) FindAllMembers() ([]models.Members, error) {
+	var members []models.Members
+	if err := tr.db.Table("members").Select(
+		`members.name,members.roll_no,roles.name as role,teams.name as team,
+		CONCAT(?::text,'/static/images','/',assets.name) as image_url`, config.Origin,
+	).Joins(
+		"JOIN assets on assets.id = members.asset_id").Joins(
+		"JOIN teams on teams.id = members.team_id").Joins(
+		"JOIN roles on roles.id = members.role_id").Scan(
+		&members).Error; err != nil {
+		return nil, err
+	}
+
+	return members, nil
 }

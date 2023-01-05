@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API for Probe Application.",
-        "title": "Probe API",
+        "description": "Admin Panel for Probe Application.",
+        "title": "Probe Admin",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "Probe Webops",
@@ -44,7 +44,7 @@
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -165,7 +165,7 @@
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -222,7 +222,7 @@
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     }
@@ -260,12 +260,12 @@
                 "tags": [
                     "Team"
                 ],
-                "summary": "Edit a team member's team",
+                "summary": "Edit a team member's role",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -282,7 +282,7 @@
                         ],
                         "type": "string",
                         "description": "Change role",
-                        "name": "team",
+                        "name": "role",
                         "in": "formData",
                         "required": true
                     }
@@ -320,12 +320,12 @@
                 "tags": [
                     "Team"
                 ],
-                "summary": "Edit a team member's role",
+                "summary": "Edit a team member's team",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -336,7 +336,7 @@
                         ],
                         "type": "string",
                         "description": "Change team",
-                        "name": "role",
+                        "name": "team",
                         "in": "formData",
                         "required": true
                     }
@@ -566,7 +566,7 @@
                 "role": {
                     "$ref": "#/definitions/models.MemberRoles"
                 },
-                "roll_no": {
+                "rollnumber": {
                     "type": "string"
                 },
                 "team": {

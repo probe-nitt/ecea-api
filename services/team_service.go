@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"log"
 	"mime/multipart"
 
 	"github.com/ecea-nitt/ecea-server/helpers"
@@ -9,6 +10,7 @@ import (
 	"github.com/ecea-nitt/ecea-server/repositories"
 	"github.com/ecea-nitt/ecea-server/schemas"
 	"github.com/ecea-nitt/ecea-server/utils"
+	"github.com/fatih/color"
 )
 
 type teamService struct {
@@ -44,6 +46,16 @@ func (ts *teamService) CreateTeamMember(
 	memberDetails models.MemberRequest,
 	memberImage *multipart.FileHeader) error {
 
+	name, err := utils.NameValidator(memberDetails.Name)
+	if err != nil {
+		return err
+	}
+	rollNo, err := utils.NumericValidator(memberDetails.RollNo)
+	if err != nil {
+		return err
+	}
+	log.Println(color.RedString(rollNo))
+
 	teamChannel := make(chan int)
 	roleChannel := make(chan int)
 	assetChannel := make(chan int)
@@ -60,15 +72,6 @@ func (ts *teamService) CreateTeamMember(
 
 	if teamID == -1 || roleID == -1 || assetID == -1 {
 		return errors.New("Error Occurred")
-	}
-
-	name, err := utils.NameValidator(memberDetails.Name)
-	if err != nil {
-		return err
-	}
-	rollNo, err := utils.NumericValidator(memberDetails.RollNo)
-	if err != nil {
-		return err
 	}
 
 	member := schemas.Member{
@@ -157,7 +160,7 @@ func (ts *teamService) EditTeamMemberRole(
 	roleID := helpers.UpdateAndFetchRoleID(
 		dbMember.RoleID,
 		dbMember.Role.Name,
-		string(reqMember.Team),
+		string(reqMember.Role),
 		ts.repo)
 
 	if roleID == -1 {

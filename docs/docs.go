@@ -53,7 +53,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -174,7 +174,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -231,7 +231,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     }
@@ -269,12 +269,12 @@ const docTemplate = `{
                 "tags": [
                     "Team"
                 ],
-                "summary": "Edit a team member's team",
+                "summary": "Edit a team member's role",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -291,7 +291,7 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "description": "Change role",
-                        "name": "team",
+                        "name": "role",
                         "in": "formData",
                         "required": true
                     }
@@ -329,12 +329,12 @@ const docTemplate = `{
                 "tags": [
                     "Team"
                 ],
-                "summary": "Edit a team member's role",
+                "summary": "Edit a team member's team",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Enter roll no",
-                        "name": "rollNo",
+                        "name": "rollnumber",
                         "in": "formData",
                         "required": true
                     },
@@ -345,7 +345,7 @@ const docTemplate = `{
                         ],
                         "type": "string",
                         "description": "Change team",
-                        "name": "role",
+                        "name": "team",
                         "in": "formData",
                         "required": true
                     }
@@ -575,7 +575,7 @@ const docTemplate = `{
                 "role": {
                     "$ref": "#/definitions/models.MemberRoles"
                 },
-                "roll_no": {
+                "rollnumber": {
                     "type": "string"
                 },
                 "team": {
@@ -622,8 +622,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Probe API",
-	Description:      "API for Probe Application.",
+	Title:            "Probe Admin",
+	Description:      "Admin Panel for Probe Application.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
