@@ -38,26 +38,6 @@ func FetchRoleID(
 
 }
 
-func UploadAndFetchAssetID(
-	channel chan int,
-	image *multipart.FileHeader,
-	repo repositories.TeamRepository) {
-
-	fileName, err := utils.UploadImage(image)
-	if err != nil {
-		log.Println(err)
-		channel <- -1
-		return
-	}
-	id, err := repo.InsertAsset(fileName)
-	if err != nil {
-		log.Println(err)
-		channel <- -1
-		return
-	}
-	channel <- int(id)
-}
-
 func UpdateAndFetchTeamID(
 	dbID uint,
 	dbName string,

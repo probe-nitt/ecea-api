@@ -17,6 +17,7 @@ type AssetType struct {
 type AssetTypes string
 
 const (
-	Image    AssetTypes = "IMAGE"
-	Document AssetTypes = "DOCUMENT"
+	Image         AssetTypes = "IMAGE"
+	Document      AssetTypes = "DOCUMENT"
+	ExternalAudio AssetTypes = "EXTERNAL_AUDIO"
 )

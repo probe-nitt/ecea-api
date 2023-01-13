@@ -75,6 +75,54 @@ info:
   title: Probe Admin
   version: "1.0"
 paths:
+  /v1/podcast/create:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Adds a new podcast to the database
+      parameters:
+      - description: Enter name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: Enter description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Enter Media URL
+        in: formData
+        name: mediaURL
+        required: true
+        type: string
+      - description: Upload Thumbnail
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Create Podcast
+      tags:
+      - Podcast
   /v1/team/add:
     post:
       consumes:

@@ -14,6 +14,7 @@ type SeederService interface {
 	AssetTypesSeeder() error
 	TeamsSeeder() error
 	RolesSeeder() error
+	PodcastTypesSeeder() error
 }
 
 var teams = []schemas.Team{
@@ -61,6 +62,15 @@ var assetTypes = []schemas.AssetType{
 	},
 }
 
+var podcastTypes = []schemas.PodcastType{
+	{
+		Name: string(schemas.CareerPath),
+	},
+	{
+		Name: string(schemas.GuestLecture),
+	},
+}
+
 func NewSeeder(repo repositories.SeedRepository) SeederService {
 	return &seederService{repo}
 }
@@ -75,4 +85,8 @@ func (s *seederService) RolesSeeder() error {
 
 func (s *seederService) AssetTypesSeeder() error {
 	return s.repo.InsertAssetTypes(assetTypes)
+}
+
+func (s *seederService) PodcastTypesSeeder() error {
+	return s.repo.InsertPodcastTypes(podcastTypes)
 }
