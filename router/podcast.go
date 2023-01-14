@@ -16,12 +16,11 @@ func PodcastRoutes(e *echo.Group, c controllers.PodcastController) {
 	// podcast.GET("/getall/:type", c.GetPodcastByType)
 	// podcast.GET("/get/:name", c.GetPodcastByName)
 
-	// // Update
-	// podcast.POST("/edit/thumbnail", c.EditThumbnail)
-	// podcast.POST("/edit/media", c.EditURL)
-	// podcast.POST("/edit/description", c.EditDescription)
+	// Update
+	podcast.PUT("/edit/thumbnail", c.EditThumbnail)
+	podcast.PUT("/edit/url", c.EditURL)
+	podcast.PUT("/edit/description", c.EditDescription)
 
-	// // Delete
-	// podcast.DELETE("/delete/:name", c.DeletePodcastByName)
-
+	// Delete
+	podcast.DELETE("/delete/:name", c.DeletePodcast)
 }

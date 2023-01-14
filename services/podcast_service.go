@@ -19,6 +19,13 @@ type PodcastService interface {
 	CreatePodcast(
 		podcastDetails models.PodcastRequest,
 		podcastImage *multipart.FileHeader) error
+	EditThumbnail(
+		podcastDetails models.PodcastRequest,
+		podcastImage *multipart.FileHeader) error
+
+	EditURL(podcastDetails models.PodcastRequest) error
+	EditDescription(podcastDetails models.PodcastRequest) error
+	DeletePodcast(podcastName string) error
 }
 
 func NewPodcastService(repo repositories.PodcastRepository) PodcastService {
@@ -62,4 +69,83 @@ func (ps *podcastService) CreatePodcast(
 	}
 
 	return ps.repo.InsertPodcast(newPodcast)
+}
+
+func (ps *podcastService) EditThumbnail(
+	podcast models.PodcastRequest,
+	podcastImage *multipart.FileHeader) error {
+
+	name, err := utils.NameValidator(podcast.Name)
+	if err != nil {
+		return err
+	}
+
+	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	if err != nil {
+		return err
+	}
+
+	assetChannel := make(chan int)
+
+	go helpers.UploadAndFetchAssetID(assetChannel, podcastImage, ps.repo, "podcast")
+
+	assetID := <-assetChannel
+
+	if assetID == -1 {
+		return errors.New("error uploading asset")
+	}
+
+	return ps.repo.UpdatePodcastThumbnail(dbPodcast.ID, uint(assetID))
+}
+
+func (ps *podcastService) EditURL(podcast models.PodcastRequest) error {
+	name, err := utils.NameValidator(podcast.Name)
+	if err != nil {
+		return err
+	}
+
+	mediaURL, err := utils.URLValidator(podcast.MediaURL)
+	if err != nil {
+		return err
+	}
+
+	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	if err != nil {
+		return err
+	}
+
+	return ps.repo.UpdatePodcastURL(dbPodcast.ID, mediaURL)
+}
+
+func (ps *podcastService) EditDescription(podcast models.PodcastRequest) error {
+	name, err := utils.NameValidator(podcast.Name)
+	if err != nil {
+		return err
+	}
+
+	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	if err != nil {
+		return err
+	}
+
+	return ps.repo.UpdatePodcastDescription(dbPodcast.ID, podcast.Description)
+}
+
+func (ps *podcastService) DeletePodcast(podcastName string) error {
+	name, err := utils.NameValidator(podcastName)
+	if err != nil {
+		return err
+	}
+
+	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	if err != nil {
+		return err
+	}
+
+	err = utils.DeleteImage(dbPodcast.Thumbnail.Name)
+	if err != nil {
+		return err
+	}
+
+	return ps.repo.DeletePodcast(dbPodcast.ID)
 }

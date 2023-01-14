@@ -7,6 +7,8 @@ import (
 	"github.com/ecea-nitt/ecea-server/middlewares"
 	"github.com/ecea-nitt/ecea-server/models"
 	"github.com/ecea-nitt/ecea-server/services"
+	"github.com/ecea-nitt/ecea-server/utils"
+	"github.com/fatih/color"
 	"github.com/labstack/echo/v4"
 )
 
@@ -16,13 +18,17 @@ type podcastController struct {
 
 type PodcastController interface {
 	CreatePodcast(c echo.Context) error
+	EditThumbnail(c echo.Context) error
+	EditURL(c echo.Context) error
+	EditDescription(c echo.Context) error
+	DeletePodcast(c echo.Context) error
 }
 
 func NewPodcastController(ps services.PodcastService) PodcastController {
 	return &podcastController{ps}
 }
 
-// AddMember godoc
+// CreatePodcast godoc
 //
 //	@Summary		Create Podcast
 //	@Description	Adds a new podcast to the database
@@ -41,19 +47,141 @@ func NewPodcastController(ps services.PodcastService) PodcastController {
 func (pc *podcastController) CreatePodcast(c echo.Context) error {
 	request := new(models.PodcastRequest)
 	if err := c.Bind(request); err != nil {
-		log.Println(err)
+		log.Println(color.RedString(err.Error()))
 		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 	}
 
 	file, err := c.FormFile("image")
 	if err != nil {
-		log.Println(err)
+		log.Println(color.RedString(err.Error()))
 		return err
 	}
 
 	err = pc.ps.CreatePodcast(*request, file)
 	if err != nil {
-		log.Println(err)
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+	}
+
+	return middlewares.Responder(c, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+// EditThumbnail godoc
+//
+//	@Summary		Edit Thumbnail
+//	@Description	Edits the thumbnail of a podcast
+//	@Tags			Podcast
+//	@Accept					multipart/form-data
+//	@Produce		json
+//	@Param					name	formData	string	true 	"Enter name"
+//	@Param					image	formData	file	true	"Upload Thumbnail"
+//	@Success		200	{object}    string
+//	@Failure		400	{object}	models.Error
+//
+// @Router			/v1/podcast/edit/thumbnail [put]
+func (pc *podcastController) EditThumbnail(c echo.Context) error {
+	request := new(models.PodcastRequest)
+	if err := c.Bind(request); err != nil {
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		log.Println(color.RedString(err.Error()))
+		return err
+	}
+
+	err = pc.ps.EditThumbnail(*request, file)
+	if err != nil {
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+	}
+
+	return middlewares.Responder(c, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+// EditURL godoc
+//
+//	@Summary		Edit URL
+//	@Description	Edits the media url of a podcast
+//	@Tags			Podcast
+//	@Accept		multipart/form-data
+//	@Produce		json
+//	@Param					name	formData	string	true 	"Enter name"
+//	@Param					mediaURL	formData	string	true 	"Enter Media URL"
+//	@Success		200	{object}    string
+//	@Failure		400	{object}	models.Error
+//
+// @Router			/v1/podcast/edit/url [put]
+func (pc *podcastController) EditURL(c echo.Context) error {
+	request := new(models.PodcastRequest)
+	if err := c.Bind(request); err != nil {
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+	}
+
+	err := pc.ps.EditURL(*request)
+	if err != nil {
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+	}
+
+	return middlewares.Responder(c, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+// EditDescription godoc
+//
+//	@Summary		Edit Description
+//	@Description	Edits the description of a podcast
+//	@Tags			Podcast
+//	@Accept		multipart/form-data
+//	@Produce		json
+//	@Param					name	formData	string	true 	"Enter name"
+//	@Param					description	formData	string	true 	"Enter description"
+//	@Success		200	{object}    string
+//	@Failure		400	{object}	models.Error
+//
+// @Router			/v1/podcast/edit/description [put]
+func (pc *podcastController) EditDescription(c echo.Context) error {
+	request := new(models.PodcastRequest)
+	if err := c.Bind(request); err != nil {
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+	}
+
+	err := pc.ps.EditDescription(*request)
+	if err != nil {
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+	}
+
+	return middlewares.Responder(c, http.StatusOK, http.StatusText(http.StatusOK))
+}
+
+// DeletePodcast godoc
+//
+//	@Summary		Delete Podcast
+//	@Description	Deletes a podcast
+//	@Tags			Podcast
+//	@Accept		json
+//	@Produce		json
+//	@Param					name	path	string	true 	"Enter name"
+//	@Success		200	{object}    string
+//	@Failure		400	{object}	models.Error
+//
+// @Router			/v1/podcast/delete/{name} [delete]
+func (pc *podcastController) DeletePodcast(c echo.Context) error {
+	name, err := utils.NameValidator(c.Param("name"))
+	if err != nil {
+		log.Println(color.RedString(err.Error()))
+		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+	}
+
+	err = pc.ps.DeletePodcast(name)
+
+	if err != nil {
+		log.Println(color.RedString(err.Error()))
 		return middlewares.Responder(c, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 	}
 

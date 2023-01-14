@@ -13,6 +13,12 @@ type PodcastRepository interface {
 	InsertPodcast(podcast schemas.Podcast) error
 	InsertAsset(name string) (uint, error)
 	FindPodcastTypeByName(name string) (uint, error)
+	FindPodcastByName(podcastName string) (schemas.Podcast, error)
+	FetchThumbnail(podcastID uint) (schemas.Asset, error)
+	UpdatePodcastThumbnail(podcastID uint, assetID uint) error
+	UpdatePodcastURL(podcastID uint, url string) error
+	UpdatePodcastDescription(podcastID uint, description string) error
+	DeletePodcast(podcastID uint) error
 }
 
 func NewPodcastRepository(db *gorm.DB) PodcastRepository {
@@ -44,4 +50,37 @@ func (pr *podcastRepository) FindPodcastTypeByName(name string) (uint, error) {
 		return 0, err
 	}
 	return podcastType.ID, nil
+}
+
+func (pr *podcastRepository) FindPodcastByName(name string) (schemas.Podcast, error) {
+	var podcast schemas.Podcast
+	if err := pr.db.Where("name = ?", name).First(&podcast).Error; err != nil {
+		return schemas.Podcast{}, err
+	}
+
+	return podcast, nil
+}
+
+func (pr *podcastRepository) FetchThumbnail(podcastID uint) (schemas.Asset, error) {
+	var podcast schemas.Podcast
+	if err := pr.db.Preload("Thumbnail").Where("id = ?", podcastID).First(&podcast).Error; err != nil {
+		return schemas.Asset{}, err
+	}
+	return podcast.Thumbnail, nil
+}
+
+func (pr *podcastRepository) UpdatePodcastThumbnail(podcastID uint, assetID uint) error {
+	return pr.db.Model(&schemas.Podcast{}).Where("id = ?", podcastID).Update("thumbnail_id", assetID).Error
+}
+
+func (pr *podcastRepository) UpdatePodcastURL(podcastID uint, url string) error {
+	return pr.db.Model(&schemas.Podcast{}).Where("id = ?", podcastID).Update("media_url", url).Error
+}
+
+func (pr *podcastRepository) UpdatePodcastDescription(podcastID uint, description string) error {
+	return pr.db.Model(&schemas.Podcast{}).Where("id = ?", podcastID).Update("description", description).Error
+}
+
+func (pr *podcastRepository) DeletePodcast(podcastID uint) error {
+	return pr.db.Unscoped().Delete(&schemas.Podcast{}, podcastID).Error
 }

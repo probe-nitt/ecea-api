@@ -31,3 +31,11 @@ services:
     command: -p ${POSTGRES_PORT}
     volumes:
       - ./database:/data/postgres
+
+  adminer:
+    image: adminer
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - ${ADMINER_PORT}:${ADMINER_PORT}

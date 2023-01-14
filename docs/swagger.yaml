@@ -123,6 +123,121 @@ paths:
       summary: Create Podcast
       tags:
       - Podcast
+  /v1/podcast/delete/{name}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a podcast
+      parameters:
+      - description: Enter name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Delete Podcast
+      tags:
+      - Podcast
+  /v1/podcast/edit/description:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits the description of a podcast
+      parameters:
+      - description: Enter name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Enter description
+        in: formData
+        name: description
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Edit Description
+      tags:
+      - Podcast
+  /v1/podcast/edit/thumbnail:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits the thumbnail of a podcast
+      parameters:
+      - description: Enter name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Upload Thumbnail
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Edit Thumbnail
+      tags:
+      - Podcast
+  /v1/podcast/edit/url:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits the media url of a podcast
+      parameters:
+      - description: Enter name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Enter Media URL
+        in: formData
+        name: mediaURL
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Edit URL
+      tags:
+      - Podcast
   /v1/team/add:
     post:
       consumes:
