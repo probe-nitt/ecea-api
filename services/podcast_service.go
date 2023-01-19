@@ -25,7 +25,7 @@ type PodcastService interface {
 
 	EditURL(podcastDetails models.PodcastRequest) error
 	EditDescription(podcastDetails models.PodcastRequest) error
-	DeletePodcast(podcastName string) error
+	DeletePodcast(podcastDetails models.PodcastRequest) error
 }
 
 func NewPodcastService(repo repositories.PodcastRepository) PodcastService {
@@ -64,6 +64,7 @@ func (ps *podcastService) CreatePodcast(
 		Name:        name,
 		Description: podcast.Description,
 		MediaURL:    mediaURL,
+		EpisodeNo:   podcast.EpisodeNo,
 		ThumbnailID: uint(assetID),
 		TypeID:      uint(podcastTypeID),
 	}
@@ -75,12 +76,17 @@ func (ps *podcastService) EditThumbnail(
 	podcast models.PodcastRequest,
 	podcastImage *multipart.FileHeader) error {
 
-	name, err := utils.NameValidator(podcast.Name)
+	dbPodcast, err := ps.repo.FindPodcastByEpisodeNoAndType(podcast.EpisodeNo, string(podcast.Type))
 	if err != nil {
 		return err
 	}
 
-	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	thumbnail, err := ps.repo.FetchThumbnail(dbPodcast.ThumbnailID)
+	if err != nil {
+		return err
+	}
+
+	err = utils.DeleteImage(thumbnail.Name)
 	if err != nil {
 		return err
 	}
@@ -99,17 +105,12 @@ func (ps *podcastService) EditThumbnail(
 }
 
 func (ps *podcastService) EditURL(podcast models.PodcastRequest) error {
-	name, err := utils.NameValidator(podcast.Name)
-	if err != nil {
-		return err
-	}
-
 	mediaURL, err := utils.URLValidator(podcast.MediaURL)
 	if err != nil {
 		return err
 	}
 
-	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	dbPodcast, err := ps.repo.FindPodcastByEpisodeNoAndType(podcast.EpisodeNo, string(podcast.Type))
 	if err != nil {
 		return err
 	}
@@ -118,12 +119,7 @@ func (ps *podcastService) EditURL(podcast models.PodcastRequest) error {
 }
 
 func (ps *podcastService) EditDescription(podcast models.PodcastRequest) error {
-	name, err := utils.NameValidator(podcast.Name)
-	if err != nil {
-		return err
-	}
-
-	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	dbPodcast, err := ps.repo.FindPodcastByEpisodeNoAndType(podcast.EpisodeNo, string(podcast.Type))
 	if err != nil {
 		return err
 	}
@@ -131,18 +127,18 @@ func (ps *podcastService) EditDescription(podcast models.PodcastRequest) error {
 	return ps.repo.UpdatePodcastDescription(dbPodcast.ID, podcast.Description)
 }
 
-func (ps *podcastService) DeletePodcast(podcastName string) error {
-	name, err := utils.NameValidator(podcastName)
+func (ps *podcastService) DeletePodcast(podcast models.PodcastRequest) error {
+	dbPodcast, err := ps.repo.FindPodcastByEpisodeNoAndType(podcast.EpisodeNo, string(podcast.Type))
 	if err != nil {
 		return err
 	}
 
-	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	thumbnail, err := ps.repo.FetchThumbnail(dbPodcast.ID)
 	if err != nil {
 		return err
 	}
 
-	err = utils.DeleteImage(dbPodcast.Thumbnail.Name)
+	err = utils.DeleteImage(thumbnail.Name)
 	if err != nil {
 		return err
 	}

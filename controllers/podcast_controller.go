@@ -7,7 +7,6 @@ import (
 	"github.com/ecea-nitt/ecea-server/middlewares"
 	"github.com/ecea-nitt/ecea-server/models"
 	"github.com/ecea-nitt/ecea-server/services"
-	"github.com/ecea-nitt/ecea-server/utils"
 	"github.com/fatih/color"
 	"github.com/labstack/echo/v4"
 )
@@ -36,6 +35,7 @@ func NewPodcastController(ps services.PodcastService) PodcastController {
 //	@Accept					multipart/form-data
 //	@Produce		json
 //	@Param					name	formData	string	true 	"Enter name"
+//	@Param					episodeNo	formData	uint	true 	"Enter episode number"
 //	@Param					type	formData	models.PodcastType	true 	"Choose a type"
 //	@Param					description	formData	string	true 	"Enter description"
 //	@Param					mediaURL	formData	string	true 	"Enter Media URL"
@@ -43,6 +43,7 @@ func NewPodcastController(ps services.PodcastService) PodcastController {
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //
+// @Security 		ApiKeyAuth
 // @Router			/v1/podcast/create [post]
 func (pc *podcastController) CreatePodcast(c echo.Context) error {
 	request := new(models.PodcastRequest)
@@ -73,11 +74,15 @@ func (pc *podcastController) CreatePodcast(c echo.Context) error {
 //	@Tags			Podcast
 //	@Accept					multipart/form-data
 //	@Produce		json
-//	@Param					name	formData	string	true 	"Enter name"
+//	@Param					episodeNo	formData	uint	true 	"Enter episode number"
+//
+// @Param 					type 	formData	models.PodcastType	true 	"Choose a type"
+//
 //	@Param					image	formData	file	true	"Upload Thumbnail"
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //
+// @Security 		ApiKeyAuth
 // @Router			/v1/podcast/edit/thumbnail [put]
 func (pc *podcastController) EditThumbnail(c echo.Context) error {
 	request := new(models.PodcastRequest)
@@ -108,11 +113,15 @@ func (pc *podcastController) EditThumbnail(c echo.Context) error {
 //	@Tags			Podcast
 //	@Accept		multipart/form-data
 //	@Produce		json
-//	@Param					name	formData	string	true 	"Enter name"
+//	@Param					episodeNo	formData	uint	true 	"Enter episode number"
+//
+// @Param 					type 	formData	models.PodcastType	true 	"Choose a type"
+//
 //	@Param					mediaURL	formData	string	true 	"Enter Media URL"
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //
+// @Security 		ApiKeyAuth
 // @Router			/v1/podcast/edit/url [put]
 func (pc *podcastController) EditURL(c echo.Context) error {
 	request := new(models.PodcastRequest)
@@ -137,11 +146,15 @@ func (pc *podcastController) EditURL(c echo.Context) error {
 //	@Tags			Podcast
 //	@Accept		multipart/form-data
 //	@Produce		json
-//	@Param					name	formData	string	true 	"Enter name"
+//	@Param					episodeNo	formData	uint	true 	"Enter episode number"
+//
+// @Param 					type 	formData	models.PodcastType	true 	"Choose a type"
+//
 //	@Param					description	formData	string	true 	"Enter description"
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //
+// @Security 		ApiKeyAuth
 // @Router			/v1/podcast/edit/description [put]
 func (pc *podcastController) EditDescription(c echo.Context) error {
 	request := new(models.PodcastRequest)
@@ -164,21 +177,26 @@ func (pc *podcastController) EditDescription(c echo.Context) error {
 //	@Summary		Delete Podcast
 //	@Description	Deletes a podcast
 //	@Tags			Podcast
-//	@Accept		json
+//	@Accept		multipart/form-data
 //	@Produce		json
-//	@Param					name	path	string	true 	"Enter name"
+//	@Param					episodeNo	formData	uint	true 	"Enter episode number"
+//
+// @Param 					type 	formData	models.PodcastType	true 	"Choose a type"
+//
 //	@Success		200	{object}    string
 //	@Failure		400	{object}	models.Error
 //
-// @Router			/v1/podcast/delete/{name} [delete]
+// @Security 		ApiKeyAuth
+// @Router			/v1/podcast/delete [delete]
 func (pc *podcastController) DeletePodcast(c echo.Context) error {
-	name, err := utils.NameValidator(c.Param("name"))
-	if err != nil {
+	request := new(models.PodcastRequest)
+
+	if err := c.Bind(request); err != nil {
 		log.Println(color.RedString(err.Error()))
 		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 	}
 
-	err = pc.ps.DeletePodcast(name)
+	err := pc.ps.DeletePodcast(*request)
 
 	if err != nil {
 		log.Println(color.RedString(err.Error()))

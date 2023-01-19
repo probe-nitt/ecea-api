@@ -12,8 +12,8 @@ type podcastRepository struct {
 type PodcastRepository interface {
 	InsertPodcast(podcast schemas.Podcast) error
 	InsertAsset(name string) (uint, error)
-	FindPodcastTypeByName(name string) (uint, error)
-	FindPodcastByName(podcastName string) (schemas.Podcast, error)
+	FindPodcastTypeByName(name string) (schemas.PodcastType, error)
+	FindPodcastByEpisodeNoAndType(episodeNo uint, podcastType string) (schemas.Podcast, error)
 	FetchThumbnail(podcastID uint) (schemas.Asset, error)
 	UpdatePodcastThumbnail(podcastID uint, assetID uint) error
 	UpdatePodcastURL(podcastID uint, url string) error
@@ -44,21 +44,25 @@ func (pr *podcastRepository) InsertAsset(name string) (uint, error) {
 	return asset.ID, nil
 }
 
-func (pr *podcastRepository) FindPodcastTypeByName(name string) (uint, error) {
-	var podcastType schemas.PodcastType
-	if err := pr.db.Where("name = ?", name).First(&podcastType).Error; err != nil {
-		return 0, err
-	}
-	return podcastType.ID, nil
-}
-
-func (pr *podcastRepository) FindPodcastByName(name string) (schemas.Podcast, error) {
-	var podcast schemas.Podcast
-	if err := pr.db.Where("name = ?", name).First(&podcast).Error; err != nil {
+func (pr *podcastRepository) FindPodcastByEpisodeNoAndType(episodeNo uint, podcastType string) (schemas.Podcast, error) {
+	var podcastTypeSchema schemas.PodcastType
+	if err := pr.db.Where("name = ?", podcastType).First(&podcastTypeSchema).Error; err != nil {
 		return schemas.Podcast{}, err
 	}
-
+	var podcast schemas.Podcast
+	if err := pr.db.Where("episode_no = ? AND type_id = ?", episodeNo, podcastTypeSchema.ID).First(&podcast).Error; err != nil {
+		return schemas.Podcast{}, err
+	}
 	return podcast, nil
+}
+
+func (pr *podcastRepository) FindPodcastTypeByName(name string) (schemas.PodcastType, error) {
+	var podcastType schemas.PodcastType
+	if err := pr.db.Where("name = ?", name).First(&podcastType).Error; err != nil {
+		return schemas.PodcastType{}, err
+	}
+
+	return podcastType, nil
 }
 
 func (pr *podcastRepository) FetchThumbnail(podcastID uint) (schemas.Asset, error) {

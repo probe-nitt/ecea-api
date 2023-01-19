@@ -26,6 +26,11 @@ const docTemplate = `{
     "paths": {
         "/v1/podcast/create": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Adds a new podcast to the database",
                 "consumes": [
                     "multipart/form-data"
@@ -42,6 +47,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Enter name",
                         "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
                         "in": "formData",
                         "required": true
                     },
@@ -94,11 +106,16 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/podcast/delete/{name}": {
+        "/v1/podcast/delete": {
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Deletes a podcast",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -109,10 +126,21 @@ const docTemplate = `{
                 "summary": "Delete Podcast",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
                         "type": "string",
-                        "description": "Enter name",
-                        "name": "name",
-                        "in": "path",
+                        "description": "Choose a type",
+                        "name": "type",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -134,6 +162,11 @@ const docTemplate = `{
         },
         "/v1/podcast/edit/description": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Edits the description of a podcast",
                 "consumes": [
                     "multipart/form-data"
@@ -147,9 +180,20 @@ const docTemplate = `{
                 "summary": "Edit Description",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
                         "type": "string",
-                        "description": "Enter name",
-                        "name": "name",
+                        "description": "Choose a type",
+                        "name": "type",
                         "in": "formData",
                         "required": true
                     },
@@ -179,6 +223,11 @@ const docTemplate = `{
         },
         "/v1/podcast/edit/thumbnail": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Edits the thumbnail of a podcast",
                 "consumes": [
                     "multipart/form-data"
@@ -192,9 +241,20 @@ const docTemplate = `{
                 "summary": "Edit Thumbnail",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
                         "type": "string",
-                        "description": "Enter name",
-                        "name": "name",
+                        "description": "Choose a type",
+                        "name": "type",
                         "in": "formData",
                         "required": true
                     },
@@ -224,6 +284,11 @@ const docTemplate = `{
         },
         "/v1/podcast/edit/url": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Edits the media url of a podcast",
                 "consumes": [
                     "multipart/form-data"
@@ -237,9 +302,20 @@ const docTemplate = `{
                 "summary": "Edit URL",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
                         "type": "string",
-                        "description": "Enter name",
-                        "name": "name",
+                        "description": "Choose a type",
+                        "name": "type",
                         "in": "formData",
                         "required": true
                     },

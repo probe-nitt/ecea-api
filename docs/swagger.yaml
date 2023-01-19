@@ -86,6 +86,11 @@ paths:
         name: name
         required: true
         type: string
+      - description: Enter episode number
+        in: formData
+        name: episodeNo
+        required: true
+        type: integer
       - description: Choose a type
         enum:
         - GUEST_LECTURE
@@ -120,18 +125,28 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
       summary: Create Podcast
       tags:
       - Podcast
-  /v1/podcast/delete/{name}:
+  /v1/podcast/delete:
     delete:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Deletes a podcast
       parameters:
-      - description: Enter name
-        in: path
-        name: name
+      - description: Enter episode number
+        in: formData
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
         required: true
         type: string
       produces:
@@ -145,6 +160,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
       summary: Delete Podcast
       tags:
       - Podcast
@@ -154,9 +171,17 @@ paths:
       - multipart/form-data
       description: Edits the description of a podcast
       parameters:
-      - description: Enter name
+      - description: Enter episode number
         in: formData
-        name: name
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
         required: true
         type: string
       - description: Enter description
@@ -175,6 +200,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
       summary: Edit Description
       tags:
       - Podcast
@@ -184,9 +211,17 @@ paths:
       - multipart/form-data
       description: Edits the thumbnail of a podcast
       parameters:
-      - description: Enter name
+      - description: Enter episode number
         in: formData
-        name: name
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
         required: true
         type: string
       - description: Upload Thumbnail
@@ -205,6 +240,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
       summary: Edit Thumbnail
       tags:
       - Podcast
@@ -214,9 +251,17 @@ paths:
       - multipart/form-data
       description: Edits the media url of a podcast
       parameters:
-      - description: Enter name
+      - description: Enter episode number
         in: formData
-        name: name
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
         required: true
         type: string
       - description: Enter Media URL
@@ -235,6 +280,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
       summary: Edit URL
       tags:
       - Podcast

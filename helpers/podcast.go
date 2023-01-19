@@ -11,12 +11,12 @@ func FetchPodcastTypeID(
 	podcastTypeName string,
 	repo repositories.PodcastRepository) {
 
-	id, err := repo.FindPodcastTypeByName(podcastTypeName)
+	podcast, err := repo.FindPodcastTypeByName(podcastTypeName)
 	if err != nil {
 		log.Println(err)
 		channel <- -1
 		return
 	}
-	channel <- int(id)
+	channel <- int(podcast.ID)
 
 }
