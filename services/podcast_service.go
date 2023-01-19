@@ -26,6 +26,9 @@ type PodcastService interface {
 	EditURL(podcastDetails models.PodcastRequest) error
 	EditDescription(podcastDetails models.PodcastRequest) error
 	DeletePodcast(podcastDetails models.PodcastRequest) error
+	GetPodcastByName(podcastName string) (schemas.Podcast, error)
+	GetAllPodcasts() ([]schemas.Podcast, error)
+	GetPodcastByType(podcastType string) ([]schemas.Podcast, error)
 }
 
 func NewPodcastService(repo repositories.PodcastRepository) PodcastService {
@@ -144,4 +147,35 @@ func (ps *podcastService) DeletePodcast(podcast models.PodcastRequest) error {
 	}
 
 	return ps.repo.DeletePodcast(dbPodcast.ID)
+}
+
+func (ps *podcastService) GetPodcastByName(podcastName string) (schemas.Podcast, error) {
+	name, err := utils.NameValidator(podcastName)
+	if err != nil {
+		return schemas.Podcast{}, err
+	}
+
+	dbPodcast, err := ps.repo.FindPodcastByName(name)
+	if err != nil {
+		return schemas.Podcast{}, err
+	}
+	return dbPodcast, nil
+
+}
+
+func (ps *podcastService) GetAllPodcasts() ([]schemas.Podcast, error) {
+	dbPodcast, err := ps.repo.GetAllPodcasts()
+	if err != nil {
+		return []schemas.Podcast{}, err
+	}
+	return dbPodcast, nil
+
+}
+
+func (ps *podcastService) GetPodcastByType(podcastType string) ([]schemas.Podcast, error) {
+	dbPodcast, err := ps.repo.GetPodcastByType(podcastType)
+	if err != nil {
+		return []schemas.Podcast{}, err
+	}
+	return dbPodcast, nil
 }

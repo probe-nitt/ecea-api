@@ -343,6 +343,135 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/podcast/get/all": {
+            "get": {
+                "description": "Gets all podcasts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Get All Podcasts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Podcasts"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/get/{name}": {
+            "get": {
+                "description": "Gets a podcast by name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Get Podcast By Name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Podcasts"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/getall/{type}": {
+            "get": {
+                "description": "Gets a podcast by type",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Get Podcast By Type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter type",
+                        "name": "type",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Podcasts"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/team/add": {
             "post": {
                 "security": [
@@ -899,6 +1028,37 @@ const docTemplate = `{
                 },
                 "team": {
                     "$ref": "#/definitions/models.MemberTeams"
+                }
+            }
+        },
+        "models.PodcastType": {
+            "type": "string",
+            "enum": [
+                "GUEST_LECTURE",
+                "CAREER_PATH"
+            ],
+            "x-enum-varnames": [
+                "Guestlecture",
+                "CareerPath"
+            ]
+        },
+        "models.Podcasts": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "mediaUrl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.PodcastType"
                 }
             }
         },

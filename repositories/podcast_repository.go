@@ -12,6 +12,7 @@ type podcastRepository struct {
 type PodcastRepository interface {
 	InsertPodcast(podcast schemas.Podcast) error
 	InsertAsset(name string) (uint, error)
+	FindPodcastByName(name string) (schemas.Podcast, error)
 	FindPodcastTypeByName(name string) (schemas.PodcastType, error)
 	FindPodcastByEpisodeNoAndType(episodeNo uint, podcastType string) (schemas.Podcast, error)
 	FetchThumbnail(podcastID uint) (schemas.Asset, error)
@@ -19,6 +20,8 @@ type PodcastRepository interface {
 	UpdatePodcastURL(podcastID uint, url string) error
 	UpdatePodcastDescription(podcastID uint, description string) error
 	DeletePodcast(podcastID uint) error
+	GetAllPodcasts() ([]schemas.Podcast, error)
+	GetPodcastByType(podcastType string) ([]schemas.Podcast, error)
 }
 
 func NewPodcastRepository(db *gorm.DB) PodcastRepository {
@@ -42,6 +45,15 @@ func (pr *podcastRepository) InsertAsset(name string) (uint, error) {
 		return 0, err
 	}
 	return asset.ID, nil
+}
+
+func (pr *podcastRepository) FindPodcastByName(name string) (schemas.Podcast, error) {
+	var podcast schemas.Podcast
+	if err := pr.db.Where("name = ?", name).First(&podcast).Error; err != nil {
+		return schemas.Podcast{}, err
+	}
+
+	return podcast, nil
 }
 
 func (pr *podcastRepository) FindPodcastByEpisodeNoAndType(episodeNo uint, podcastType string) (schemas.Podcast, error) {
@@ -87,4 +99,20 @@ func (pr *podcastRepository) UpdatePodcastDescription(podcastID uint, descriptio
 
 func (pr *podcastRepository) DeletePodcast(podcastID uint) error {
 	return pr.db.Unscoped().Delete(&schemas.Podcast{}, podcastID).Error
+}
+
+func (pr *podcastRepository) GetAllPodcasts() ([]schemas.Podcast, error) {
+	var podcasts []schemas.Podcast
+	if err := pr.db.Preload("Thumbnail").Find(&podcasts).Error; err != nil {
+		return nil, err
+	}
+	return podcasts, nil
+}
+
+func (pr *podcastRepository) GetPodcastByType(podcastType string) ([]schemas.Podcast, error) {
+	var podcasts []schemas.Podcast
+	if err := pr.db.Preload("Thumbnail").Where("podcast_type = ?", podcastType).Find(&podcasts).Error; err != nil {
+		return nil, err
+	}
+	return podcasts, nil
 }

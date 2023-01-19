@@ -14,6 +14,14 @@ import (
 	"golang.org/x/text/language"
 )
 
+func PodcastTypeValidator(s string) (string, error) {
+	var IsValid = regexp.MustCompile(`^(GUEST_LECTURE|CAREER_PATH)$`).MatchString
+	if !IsValid(s) {
+		return s, errors.New("invalid type")
+	}
+	return s, nil
+}
+
 func NameValidator(s string) (string, error) {
 	var IsLetter = regexp.MustCompile(`^[a-zA-Z ]+$`).MatchString
 	if !IsLetter(s) {

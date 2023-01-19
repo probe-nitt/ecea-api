@@ -8,6 +8,14 @@ type PodcastRequest struct {
 	Type        PodcastType `json:"type" form:"type" query:"type"`
 }
 
+type Podcasts struct {
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	MediaURL    string      `json:"mediaUrl"`
+	Type        PodcastType `json:"type"`
+	ImageURL    string      `json:"image_url"`
+}
+
 type PodcastType string
 
 const (
