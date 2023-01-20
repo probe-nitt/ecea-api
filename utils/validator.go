@@ -17,7 +17,7 @@ import (
 func NameValidator(s string) (string, error) {
 	var IsLetter = regexp.MustCompile(`^[a-zA-Z ]+$`).MatchString
 	if !IsLetter(s) {
-		return s, fmt.Errorf("Name should only contain characters")
+		return s, fmt.Errorf(" Name should only contain characters")
 	}
 	name := cases.Lower(language.Und).String(s)
 	name = cases.Title(language.Und).String(name)
@@ -37,7 +37,7 @@ func NumericValidator(s string) (string, error) {
 func EmailValidator(s string) (string, error) {
 	var IsValid = regexp.MustCompile(`^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$`).MatchString
 	if !IsValid(s) {
-		return s, errors.New("Invalid Email format")
+		return s, errors.New(" Invalid Email format")
 	}
 	return s, nil
 }
