@@ -38,7 +38,7 @@ func (ur *userRepository) UpdateVerification(code string) error {
 		return res.Error
 	}
 	if res.RowsAffected == 0 {
-		err = fmt.Errorf(" No Matching User Found")
+		err = fmt.Errorf("No Matching User Found")
 	}
 	return err
 }
