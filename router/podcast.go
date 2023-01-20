@@ -13,7 +13,7 @@ func PodcastRoutes(e *echo.Group, c controllers.PodcastController) {
 	podcast.POST("/create", middlewares.Authorizer(c.CreatePodcast))
 
 	// Read
-	podcast.GET("/getall", c.GetAllPodcasts)
+	podcast.GET("/get/all", c.GetAllPodcasts)
 	podcast.GET("/getall/:type", c.GetPodcastByType)
 	podcast.GET("/get/:name", c.GetPodcastByName)
 

@@ -110,8 +110,12 @@ func (pr *podcastRepository) GetAllPodcasts() ([]schemas.Podcast, error) {
 }
 
 func (pr *podcastRepository) GetPodcastByType(podcastType string) ([]schemas.Podcast, error) {
+	var podcastTypeSchema schemas.PodcastType
+	if err := pr.db.Where("name = ?", podcastType).First(&podcastTypeSchema).Error; err != nil {
+		return nil, err
+	}
 	var podcasts []schemas.Podcast
-	if err := pr.db.Preload("Thumbnail").Where("podcast_type = ?", podcastType).Find(&podcasts).Error; err != nil {
+	if err := pr.db.Preload("Thumbnail").Where("type_id = ?", podcastTypeSchema.ID).Find(&podcasts).Error; err != nil {
 		return nil, err
 	}
 	return podcasts, nil
