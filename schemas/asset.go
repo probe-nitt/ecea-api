@@ -11,7 +11,7 @@ type Asset struct {
 
 type AssetType struct {
 	gorm.Model
-	Name string `gorm:"not null;unique"`
+	Name string `gorm:"not null;"`
 }
 
 type AssetTypes string

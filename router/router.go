@@ -16,5 +16,6 @@ func NewRouter(e *echo.Echo, c controllers.AppController) {
 
 	UserRoutes(api, c.User)
 	TeamRoutes(api, c.Team)
+	StudyMaterialRoutes(api, c.StudyMaterial)
 	SwaggerRoutes(api)
 }
