@@ -10,18 +10,18 @@ import (
 )
 
 func FetchSubjectID(channel chan int, studyMaterialDetails models.StudyMaterialRequest, id int, repo repositories.StudyMaterialRepository) {
-	subId, err := repo.GetSubjectID(studyMaterialDetails.SubjectCode)
+	subID, err := repo.GetSubjectID(studyMaterialDetails.SubjectCode)
 	if err != nil {
-		subId, err = repo.CreateSubjectAndReturnID(studyMaterialDetails, uint(id))
+		subID, err = repo.CreateSubjectAndReturnID(studyMaterialDetails, uint(id))
 		if err != nil {
 			log.Println(err)
 			channel <- -1
 			return
 		}
-		channel <- int(subId)
+		channel <- int(subID)
 		return
 	}
-	channel <- int(subId)
+	channel <- int(subID)
 
 }
 
