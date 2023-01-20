@@ -108,6 +108,8 @@ func (tc *teamController) AddMember(c echo.Context) error {
 		log.Println(err)
 		return middlewares.Responder(c, http.StatusBadRequest, "Bad Request")
 	}
+	log.Println(request.Team)
+	log.Println(request.Role)
 	file, err := c.FormFile("image")
 	if err != nil {
 		log.Println(err)
