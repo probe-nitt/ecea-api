@@ -38,7 +38,7 @@ func (rs *studyMaterialService) CreateNewStudyMaterial(studyMaterialDetails mode
 			return err
 		}
 	*/
-	go helpers.FetchSubjectCategoryID(subjectCategoryChannel, string(studyMaterialDetails.SubjectCategory), rs.repo)
+	go helpers.FetchSubjectCategoryID(subjectCategoryChannel, studyMaterialDetails.SubjectCategory, rs.repo)
 	subjectCategoryID := <-subjectCategoryChannel
 	go helpers.FetchSubjectID(subjectChannel, studyMaterialDetails, subjectCategoryID, rs.repo)
 	go helpers.UploadFileAndFetchAssetID(assetChannel, studyMaterialFile, rs.repo)
@@ -62,7 +62,7 @@ func (rs *studyMaterialService) EditStudyMaterialSubject(subject string, code st
 		SubjectCode: code,
 	}
 	/*
-		subjectId, err := rs.repo.GetSubjectIDByCode(code)
+		subjectID, err := rs.repo.GetSubjectIDByCode(code)
 		if err != nil {
 			return err
 		}
@@ -91,15 +91,15 @@ func (rs *studyMaterialService) EditStudyMaterialURL(name string, file *multipar
 }
 
 func (rs *studyMaterialService) RemoveStudyMaterial(name string) error {
-	subjectId, err1 := rs.repo.GetSubjectIDByName(name)
+	subjectID, err1 := rs.repo.GetSubjectIDByName(name)
 	if err1 != nil {
 		return err1
 	}
-	assetId, err2 := rs.repo.GetAssetIDByName(name)
+	assetID, err2 := rs.repo.GetAssetIDByName(name)
 	if err2 != nil {
 		return err2
 	}
-	return rs.repo.DeleteStudyMaterial(name, subjectId, assetId)
+	return rs.repo.DeleteStudyMaterial(name, subjectID, assetID)
 }
 
 func (rs *studyMaterialService) GetStudyMaterial(name string) (models.StudyMaterials, error) {

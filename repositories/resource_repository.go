@@ -27,7 +27,7 @@ type StudyMaterialRepository interface {
 	CreateStudyMaterial(studyMaterial *schemas.StudyMaterial) error
 	UpdateStudyMaterialSubject(editrequest *schemas.Subject, name string, code string) error
 	UpdateStudyMaterial(studyMaterial *schemas.StudyMaterial) error
-	DeleteStudyMaterial(name string, subjectId uint, assetId uint) error
+	DeleteStudyMaterial(name string, subjectID uint, assetID uint) error
 }
 
 func NewStudyMaterialRepository(db *gorm.DB) StudyMaterialRepository {
@@ -54,12 +54,12 @@ func (rr *studyMaterialRepository) GetSubjectIDByName(name string) (uint, error)
 	}
 	return studyMaterial.SubjectID, nil
 }
-func (rr *studyMaterialRepository) DeleteStudyMaterial(name string, subjectId uint, assetId uint) error {
-	err := rr.db.Unscoped().Where("id = ?", subjectId).Delete(&schemas.Subject{}).Error
+func (rr *studyMaterialRepository) DeleteStudyMaterial(name string, subjectID uint, assetID uint) error {
+	err := rr.db.Unscoped().Where("id = ?", subjectID).Delete(&schemas.Subject{}).Error
 	if err != nil {
 		return err
 	}
-	err = rr.db.Unscoped().Where("id = ?", assetId).Delete(&schemas.Asset{}).Error
+	err = rr.db.Unscoped().Where("id = ?", assetID).Delete(&schemas.Asset{}).Error
 	if err != nil {
 		return err
 	}
