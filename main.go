@@ -36,7 +36,7 @@ func main() {
 	appController := reg.NewAppController()
 
 	// Seed database
-	// appController.Seed.SeedDB()
+	//appController.Seed.SeedDB()
 
 	// Create and Setup Echo Server
 	server := echo.New()
