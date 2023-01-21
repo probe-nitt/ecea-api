@@ -306,15 +306,23 @@ paths:
       summary: Edit URL
       tags:
       - Podcast
-  /v1/podcast/get/{name}:
+  /v1/podcast/get/{episodeNo}/{type}:
     get:
       consumes:
       - application/json
-      description: Gets a podcast by name
+      description: Gets a podcast by episode number and type
       parameters:
-      - description: Enter name
+      - description: Enter episode number
         in: path
-        name: name
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: path
+        name: type
         required: true
         type: string
       produces:
@@ -332,7 +340,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.Error'
-      summary: Get Podcast By Name
+      security:
+      - ApiKeyAuth: []
+      summary: Get Podcast By Episode Number And Type
       tags:
       - Podcast
   /v1/podcast/get/all:

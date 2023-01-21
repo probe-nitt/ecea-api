@@ -381,9 +381,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/podcast/get/{name}": {
+        "/v1/podcast/get/{episodeNo}/{type}": {
             "get": {
-                "description": "Gets a podcast by name",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Gets a podcast by episode number and type",
                 "consumes": [
                     "application/json"
                 ],
@@ -393,12 +398,23 @@ const docTemplate = `{
                 "tags": [
                     "Podcast"
                 ],
-                "summary": "Get Podcast By Name",
+                "summary": "Get Podcast By Episode Number And Type",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
                         "type": "string",
-                        "description": "Enter name",
-                        "name": "name",
+                        "description": "Choose a type",
+                        "name": "type",
                         "in": "path",
                         "required": true
                     }

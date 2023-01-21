@@ -15,7 +15,7 @@ func PodcastRoutes(e *echo.Group, c controllers.PodcastController) {
 	// Read
 	podcast.GET("/get/all", c.GetAllPodcasts)
 	podcast.GET("/getall/:type", c.GetPodcastByType)
-	podcast.GET("/get/:name", c.GetPodcastByName)
+	podcast.GET("/get/:episodeNo/:type", c.GetPodcast)
 
 	// Update
 	podcast.PUT("/edit/thumbnail", middlewares.Authorizer(c.EditThumbnail))

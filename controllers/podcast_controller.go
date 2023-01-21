@@ -3,6 +3,7 @@ package controllers
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/ecea-nitt/ecea-server/middlewares"
 	"github.com/ecea-nitt/ecea-server/models"
@@ -22,7 +23,7 @@ type PodcastController interface {
 	EditURL(c echo.Context) error
 	EditDescription(c echo.Context) error
 	DeletePodcast(c echo.Context) error
-	GetPodcastByName(c echo.Context) error
+	GetPodcast(c echo.Context) error
 	GetAllPodcasts(c echo.Context) error
 	GetPodcastByType(c echo.Context) error
 }
@@ -210,25 +211,31 @@ func (pc *podcastController) DeletePodcast(c echo.Context) error {
 	return middlewares.Responder(c, http.StatusOK, http.StatusText(http.StatusOK))
 }
 
-// GetPodcastByName godoc
-// @Summary		Get Podcast By Name
-// @Description	Gets a podcast by name
-// @Tags		Podcast
+// GetPodcastByEpisodeNumberAndType godoc
+// @Summary		Get Podcast By Episode Number And Type
+// @Description	Gets a podcast by episode number and type
+// @Tags			Podcast
 // @Accept		json
 // @Produce		json
-// @Param		name	path	string	true 	"Enter name"
+// @Param					episodeNo	path	uint	true 	"Enter episode number"
+// @Param 					type 	path	models.PodcastType	true 	"Choose a type"
 // @Success		200	{object}    models.Podcasts
 // @Failure		400	{object}	models.Error
 // @Failure		500	{object}	models.Error
-// @Router		/v1/podcast/get/{name} [get]
-func (pc *podcastController) GetPodcastByName(c echo.Context) error {
-	name, err := utils.NameValidator(c.Param("name"))
+// @Security 		ApiKeyAuth
+// @Router			/v1/podcast/get/{episodeNo}/{type} [get]
+func (pc *podcastController) GetPodcast(c echo.Context) error {
+	podcastType, err := utils.PodcastTypeValidator(c.Param("type"))
 	if err != nil {
-		log.Println(color.RedString(err.Error()))
 		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 	}
 
-	podcast, err := pc.ps.GetPodcastByName(name)
+	episodeNo, err := strconv.ParseUint(c.Param("episodeNo"), 10, 64)
+	if err != nil {
+		return middlewares.Responder(c, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+	}
+
+	podcast, err := pc.ps.GetPodcastByEpisodeNumberAndType(uint(episodeNo), podcastType)
 	if err != nil {
 		log.Println(color.RedString(err.Error()))
 		return middlewares.Responder(c, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
