@@ -84,7 +84,7 @@ func (ps *podcastService) EditThumbnail(
 		return err
 	}
 
-	thumbnail, err := ps.repo.FetchThumbnail(dbPodcast.ThumbnailID)
+	thumbnail, err := ps.repo.FetchThumbnail(dbPodcast.ID)
 	if err != nil {
 		return err
 	}
