@@ -147,7 +147,6 @@ func (rc *studyMaterialController) UpdateStudyMaterialSubject(c echo.Context) er
 			log.Println(err)
 			return middlewares.Responder(c, http.StatusBadRequest, "Bad Request")
 		}
-
 	log.Println(request.Subject, request.SubjectCode)
 	err := rc.rs.EditStudyMaterialSubject(request.Subject, request.SubjectCode)
 	if err != nil {
