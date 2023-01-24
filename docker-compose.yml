@@ -30,9 +30,11 @@ services:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     command: -p ${POSTGRES_PORT}
     volumes:
-      - ./database:/data/postgres
+      - database:/data/postgres
+volumes:
+  database:
 
-networks:
-  default:
-      external:
-        name: thirumathikart_network
+# networks:
+#  default:
+#      external:
+#        name: thirumathikart_network
