@@ -14,6 +14,7 @@ type SeederService interface {
 	AssetTypesSeeder() error
 	TeamsSeeder() error
 	RolesSeeder() error
+	StudyMaterialSeeder() error
 }
 
 var teams = []schemas.Team{
@@ -60,6 +61,32 @@ var assetTypes = []schemas.AssetType{
 		Name: string(schemas.Document),
 	},
 }
+var subjectCategory = []schemas.SubjectCategory{
+	{
+		Name: string(models.AnalogElectronics),
+	},
+	{
+		Name: string(models.CommunicationChanneling),
+	},
+	{
+		Name: string(models.DigitalElectronics),
+	},
+	{
+		Name: string(models.SystemDesignAndArchitechture),
+	},
+	{
+		Name: string(models.BasicEngineering),
+	},
+	{
+		Name: string(models.Mathematics),
+	},
+	{
+		Name: string(models.Telecommunication),
+	},
+	{
+		Name: string(models.Others),
+	},
+}
 
 func NewSeeder(repo repositories.SeedRepository) SeederService {
 	return &seederService{repo}
@@ -75,4 +102,8 @@ func (s *seederService) RolesSeeder() error {
 
 func (s *seederService) AssetTypesSeeder() error {
 	return s.repo.InsertAssetTypes(assetTypes)
+}
+
+func (s *seederService) StudyMaterialSeeder() error {
+	return s.repo.InsertSubjectCategory(subjectCategory)
 }
