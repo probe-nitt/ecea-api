@@ -24,6 +24,359 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/studymaterial/addMaterial": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Creates a new study material and adds to Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "StudyMaterial"
+                ],
+                "summary": "Add a study material",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter material name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter subject code",
+                        "name": "code",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Upload Document",
+                        "name": "document",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studymaterial/addSubject": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Creates a new subject and adds to Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "StudyMaterial"
+                ],
+                "summary": "Add a subject",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter subject name",
+                        "name": "subject",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter subject code",
+                        "name": "code",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "DIGITAL ELECTRONICS",
+                            "ANALOG ELECTRONICS",
+                            "TELECOMMUNICATION",
+                            "COMMUNICATION CHANNELING",
+                            "SYSTEM DESIGN AND ARCHITECTURE",
+                            "BASIC ENGINEERING",
+                            "MATHEMATICS",
+                            "OTHERS"
+                        ],
+                        "type": "string",
+                        "description": "Enter subject category",
+                        "name": "category",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studymaterial/delete/{name}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Deletes a study material along with its document and remove form Database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "StudyMaterial"
+                ],
+                "summary": "Deletes a study material",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Delete study material",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studymaterial/edit/document": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update a document and update it on Database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "StudyMaterial"
+                ],
+                "summary": "Update a study material's document",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter the name of material",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Edit Document",
+                        "name": "document",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studymaterial/get/{name}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Fetches a study material and removes form database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "StudyMaterial"
+                ],
+                "summary": "Get a study material",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Get study material",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.StudyMaterials"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studymaterial/getall": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Fetches all study materials belonging to every category from Database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "StudyMaterial"
+                ],
+                "summary": "Get all study materials from each category",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CategoryMaterials"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/studymaterial/getcat/{category}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Fetches all study materials belonging to a category from Database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "StudyMaterial"
+                ],
+                "summary": "Get study materials from a category",
+                "parameters": [
+                    {
+                        "enum": [
+                            "DIGITAL ELECTRONICS",
+                            "ANALOG ELECTRONICS",
+                            "TELECOMMUNICATION",
+                            "COMMUNICATION CHANNELING",
+                            "SYSTEM DESIGN AND ARCHITECTURE",
+                            "BASIC ENGINEERING",
+                            "MATHEMATICS",
+                            "OTHERS"
+                        ],
+                        "type": "string",
+                        "description": "Get study material from category",
+                        "name": "category",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.StudyMaterials"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/team/add": {
             "post": {
                 "security": [
@@ -516,6 +869,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.CategoryMaterials": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "subjects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.StudyMaterials"
+                    }
+                }
+            }
+        },
         "models.Error": {
             "type": "object",
             "properties": {
@@ -601,6 +968,26 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.StudyMaterials": {
+            "type": "object",
+            "properties": {
+                "document_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "subjectCode": {
+                    "type": "string"
+                },
+                "subject_category": {
                     "type": "string"
                 }
             }
