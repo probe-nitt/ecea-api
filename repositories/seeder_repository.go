@@ -13,6 +13,7 @@ type SeedRepository interface {
 	InsertTeams(teams []schemas.Team) error
 	InsertRoles(roles []schemas.Role) error
 	InsertAssetTypes(types []schemas.AssetType) error
+	InsertSubjectCategory(sc []schemas.SubjectCategory) error
 }
 
 func NewSeedRepository(db *gorm.DB) SeedRepository {
@@ -30,4 +31,8 @@ func (sr *seedRepository) InsertRoles(roles []schemas.Role) error {
 
 func (sr *seedRepository) InsertAssetTypes(types []schemas.AssetType) error {
 	return sr.db.Create(&types).Error
+}
+
+func (sr *seedRepository) InsertSubjectCategory(sc []schemas.SubjectCategory) error {
+	return sr.db.Create(&sc).Error
 }
