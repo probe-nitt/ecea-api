@@ -32,7 +32,10 @@ services:
     volumes:
       - ./database:/data/postgres
 
-networks:
-  default:
-      external:
-        name: thirumathikart_network
+  adminer:
+    image: adminer
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - ${ADMINER_PORT}:${ADMINER_PORT}

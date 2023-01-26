@@ -49,6 +49,27 @@ definitions:
       team:
         $ref: '#/definitions/models.MemberTeams'
     type: object
+  models.PodcastType:
+    enum:
+    - GUEST_LECTURE
+    - CAREER_PATH
+    type: string
+    x-enum-varnames:
+    - Guestlecture
+    - CareerPath
+  models.Podcasts:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      mediaUrl:
+        type: string
+      name:
+        type: string
+      type:
+        $ref: '#/definitions/models.PodcastType'
+    type: object
   models.RegisterRequest:
     properties:
       email:
@@ -75,6 +96,312 @@ info:
   title: Probe Admin
   version: "1.0"
 paths:
+  /v1/podcast/create:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Adds a new podcast to the database
+      parameters:
+      - description: Enter name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Enter episode number
+        in: formData
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: Enter description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Enter Media URL
+        in: formData
+        name: mediaURL
+        required: true
+        type: string
+      - description: Upload Thumbnail
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Podcast
+      tags:
+      - Podcast
+  /v1/podcast/delete:
+    delete:
+      consumes:
+      - multipart/form-data
+      description: Deletes a podcast
+      parameters:
+      - description: Enter episode number
+        in: formData
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Podcast
+      tags:
+      - Podcast
+  /v1/podcast/edit/description:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits the description of a podcast
+      parameters:
+      - description: Enter episode number
+        in: formData
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: Enter description
+        in: formData
+        name: description
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit Description
+      tags:
+      - Podcast
+  /v1/podcast/edit/thumbnail:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits the thumbnail of a podcast
+      parameters:
+      - description: Enter episode number
+        in: formData
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: Upload Thumbnail
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit Thumbnail
+      tags:
+      - Podcast
+  /v1/podcast/edit/url:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Edits the media url of a podcast
+      parameters:
+      - description: Enter episode number
+        in: formData
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: Enter Media URL
+        in: formData
+        name: mediaURL
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit URL
+      tags:
+      - Podcast
+  /v1/podcast/get/{episodeNo}/{type}:
+    get:
+      consumes:
+      - application/json
+      description: Gets a podcast by episode number and type
+      parameters:
+      - description: Enter episode number
+        in: path
+        name: episodeNo
+        required: true
+        type: integer
+      - description: Choose a type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Podcasts'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Get Podcast By Episode Number And Type
+      tags:
+      - Podcast
+  /v1/podcast/get/all:
+    get:
+      consumes:
+      - application/json
+      description: Gets all podcasts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Podcasts'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Get All Podcasts
+      tags:
+      - Podcast
+  /v1/podcast/getall/{type}:
+    get:
+      consumes:
+      - application/json
+      description: Gets a podcast by type
+      parameters:
+      - description: Enter type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Podcasts'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Get Podcast By Type
+      tags:
+      - Podcast
   /v1/team/add:
     post:
       consumes:

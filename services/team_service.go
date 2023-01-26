@@ -64,7 +64,7 @@ func (ts *teamService) CreateTeamMember(
 
 	go helpers.FetchRoleID(roleChannel, string(memberDetails.Role), ts.repo)
 
-	go helpers.UploadAndFetchAssetID(assetChannel, memberImage, ts.repo)
+	go helpers.UploadAndFetchAssetID(assetChannel, memberImage, ts.repo, "team")
 
 	teamID := <-teamChannel
 	roleID := <-roleChannel

@@ -24,6 +24,469 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/podcast/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Adds a new podcast to the database",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Create Podcast",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
+                        "type": "string",
+                        "description": "Choose a type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter Media URL",
+                        "name": "mediaURL",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Upload Thumbnail",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/delete": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Deletes a podcast",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Delete Podcast",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
+                        "type": "string",
+                        "description": "Choose a type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/edit/description": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edits the description of a podcast",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Edit Description",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
+                        "type": "string",
+                        "description": "Choose a type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/edit/thumbnail": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edits the thumbnail of a podcast",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Edit Thumbnail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
+                        "type": "string",
+                        "description": "Choose a type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Upload Thumbnail",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/edit/url": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Edits the media url of a podcast",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Edit URL",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
+                        "type": "string",
+                        "description": "Choose a type",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter Media URL",
+                        "name": "mediaURL",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/get/all": {
+            "get": {
+                "description": "Gets all podcasts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Get All Podcasts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Podcasts"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/get/{episodeNo}/{type}": {
+            "get": {
+                "description": "Gets a podcast by episode number and type",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Get Podcast By Episode Number And Type",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Enter episode number",
+                        "name": "episodeNo",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
+                        "type": "string",
+                        "description": "Choose a type",
+                        "name": "type",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Podcasts"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/podcast/getall/{type}": {
+            "get": {
+                "description": "Gets a podcast by type",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Podcast"
+                ],
+                "summary": "Get Podcast By Type",
+                "parameters": [
+                    {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
+                        "type": "string",
+                        "description": "Enter type",
+                        "name": "type",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Podcasts"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/team/add": {
             "post": {
                 "security": [
@@ -580,6 +1043,37 @@ const docTemplate = `{
                 },
                 "team": {
                     "$ref": "#/definitions/models.MemberTeams"
+                }
+            }
+        },
+        "models.PodcastType": {
+            "type": "string",
+            "enum": [
+                "GUEST_LECTURE",
+                "CAREER_PATH"
+            ],
+            "x-enum-varnames": [
+                "Guestlecture",
+                "CareerPath"
+            ]
+        },
+        "models.Podcasts": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "mediaUrl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.PodcastType"
                 }
             }
         },

@@ -10,6 +10,6 @@ func SwaggerRoutes(e *echo.Group) {
 	origin := config.Origin
 	url := echoSwagger.URL(origin + "/v1/admin/doc.json")
 	e.GET("/admin/*", echoSwagger.EchoWrapHandler(url))
-	// e.File("/admin/index.html", "templates/html/swagger.html")
-	// e.File("/admin/swagger-ui.css", "templates/css/swagger-ui.css")
+	e.File("/admin/index.html", "templates/html/swagger.html")
+	//e.File("/admin/swagger-ui.css", "templates/css/swagger-ui.css")
 }

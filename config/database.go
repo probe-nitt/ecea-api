@@ -47,6 +47,8 @@ func MigrateDB() {
 		&schemas.Team{},
 		&schemas.Role{},
 		&schemas.Member{},
+		&schemas.PodcastType{},
+		&schemas.Podcast{},
 	} {
 		if err := db.AutoMigrate(&schema); err != nil {
 			panic(err)
