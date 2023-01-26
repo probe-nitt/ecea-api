@@ -19,7 +19,8 @@ type Podcast struct {
 }
 
 type PodcastType struct {
-	gorm.Model
+	ID uint `gorm:"primarykey"`
+	//gorm.Model
 	Name string `gorm:"not null;unique"`
 }
 

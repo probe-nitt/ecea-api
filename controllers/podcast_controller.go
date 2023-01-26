@@ -222,7 +222,6 @@ func (pc *podcastController) DeletePodcast(c echo.Context) error {
 // @Success		200	{object}    models.Podcasts
 // @Failure		400	{object}	models.Error
 // @Failure		500	{object}	models.Error
-// @Security 		ApiKeyAuth
 // @Router			/v1/podcast/get/{episodeNo}/{type} [get]
 func (pc *podcastController) GetPodcast(c echo.Context) error {
 	podcastType, err := utils.PodcastTypeValidator(c.Param("type"))
@@ -270,7 +269,7 @@ func (pc *podcastController) GetAllPodcasts(c echo.Context) error {
 // @Tags		Podcast
 // @Accept		json
 // @Produce		json
-// @Param		type	path	string	true 	"Enter type"
+// @Param		type	path	models.PodcastType	true 	"Enter type"
 // @Success		200	{object}    []models.Podcasts
 // @Failure		400	{object}	models.Error
 // @Failure		500	{object}	models.Error

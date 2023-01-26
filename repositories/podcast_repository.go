@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"github.com/ecea-nitt/ecea-server/config"
+	"github.com/ecea-nitt/ecea-server/models"
 	"github.com/ecea-nitt/ecea-server/schemas"
 	"gorm.io/gorm"
 )
@@ -20,8 +22,9 @@ type PodcastRepository interface {
 	UpdatePodcastURL(podcastID uint, url string) error
 	UpdatePodcastDescription(podcastID uint, description string) error
 	DeletePodcast(podcastID uint) error
-	GetAllPodcasts() ([]schemas.Podcast, error)
-	GetPodcastByType(podcastType string) ([]schemas.Podcast, error)
+	GetAllPodcasts() ([]models.PodcastRequest, error)
+	GetPodcastByType(podcastType string) ([]models.PodcastRequest, error)
+	GetPodcastByEpisodeNoAndType(episodeNo uint, podcastType string) (models.PodcastRequest, error)
 }
 
 func NewPodcastRepository(db *gorm.DB) PodcastRepository {
@@ -101,22 +104,57 @@ func (pr *podcastRepository) DeletePodcast(podcastID uint) error {
 	return pr.db.Unscoped().Delete(&schemas.Podcast{}, podcastID).Error
 }
 
-func (pr *podcastRepository) GetAllPodcasts() ([]schemas.Podcast, error) {
-	var podcasts []schemas.Podcast
-	if err := pr.db.Preload("Thumbnail").Find(&podcasts).Error; err != nil {
+func (pr *podcastRepository) GetAllPodcasts() ([]models.PodcastRequest, error) {
+	var podcasts []models.PodcastRequest
+
+	if err := pr.db.Table("podcasts").Select(
+		`podcasts.name,podcasts.description,podcasts.episode_no,podcasts.media_url,podcast_types.name as type,
+		CONCAT(?::text,'/static/images','/',assets.name) as image_url`, config.Origin,
+	).Joins(
+		"JOIN assets on assets.id = podcasts.thumbnail_id").Joins(
+		"JOIN podcast_types on podcast_types.id = podcasts.type_id").Scan(
+		&podcasts).Error; err != nil {
 		return nil, err
 	}
+
 	return podcasts, nil
 }
 
-func (pr *podcastRepository) GetPodcastByType(podcastType string) ([]schemas.Podcast, error) {
-	var podcastTypeSchema schemas.PodcastType
-	if err := pr.db.Where("name = ?", podcastType).First(&podcastTypeSchema).Error; err != nil {
+func (pr *podcastRepository) GetPodcastByType(podcastType string) ([]models.PodcastRequest, error) {
+	var podcasts []models.PodcastRequest
+	if err := pr.db.Table("podcasts").Select(
+		`podcasts.name,podcasts.description,podcasts.episode_no,podcasts.media_url,podcast_types.name as type,
+		CONCAT(?::text,'/static/images','/',assets.name) as image_url`, config.Origin,
+	).Where("podcast_types.name = ?", podcastType).Joins(
+		"JOIN assets on assets.id = podcasts.thumbnail_id").Joins(
+		"JOIN podcast_types on podcast_types.id = podcasts.type_id").Scan(
+		&podcasts).Error; err != nil {
 		return nil, err
 	}
-	var podcasts []schemas.Podcast
-	if err := pr.db.Preload("Thumbnail").Where("type_id = ?", podcastTypeSchema.ID).Find(&podcasts).Error; err != nil {
-		return nil, err
-	}
+
 	return podcasts, nil
+}
+
+func (pr *podcastRepository) GetPodcastByEpisodeNoAndType(episodeNo uint, podcastType string) (models.PodcastRequest, error) {
+	var podcasts models.PodcastRequest
+	if err := pr.db.Table("podcasts").Select(
+		`podcasts.name,podcasts.description,podcasts.episode_no,podcasts.media_url,podcast_types.name as type,
+		CONCAT(?::text,'/static/images','/',assets.name) as image_url`, config.Origin,
+	).Where("podcast_types.name = ? AND episode_no = ?", podcastType, episodeNo).Joins(
+		"JOIN assets on assets.id = podcasts.thumbnail_id").Joins(
+		"JOIN podcast_types on podcast_types.id = podcasts.type_id").Scan(
+		&podcasts).Error; err != nil {
+		return models.PodcastRequest{}, err
+	}
+
+	return podcasts, nil
+	// var podcastTypeSchema schemas.PodcastType
+	// if err := pr.db.Where("name = ?", podcastType).First(&podcastTypeSchema).Error; err != nil {
+	// 	return schemas.Podcast{}, err
+	// }
+	// var podcast schemas.Podcast
+	// if err := pr.db.Where("episode_no = ? AND type_id = ?", episodeNo, podcastTypeSchema.ID).First(&podcast).Error; err != nil {
+	// 	return schemas.Podcast{}, err
+	// }
+	// return podcast, nil
 }

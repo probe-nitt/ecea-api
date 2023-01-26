@@ -383,11 +383,6 @@ const docTemplate = `{
         },
         "/v1/podcast/get/{episodeNo}/{type}": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Gets a podcast by episode number and type",
                 "consumes": [
                     "application/json"
@@ -456,6 +451,10 @@ const docTemplate = `{
                 "summary": "Get Podcast By Type",
                 "parameters": [
                     {
+                        "enum": [
+                            "GUEST_LECTURE",
+                            "CAREER_PATH"
+                        ],
                         "type": "string",
                         "description": "Enter type",
                         "name": "type",

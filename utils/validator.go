@@ -23,7 +23,7 @@ func PodcastTypeValidator(s string) (string, error) {
 }
 
 func NameValidator(s string) (string, error) {
-	var IsLetter = regexp.MustCompile(`^[a-zA-Z ]+$`).MatchString
+	var IsLetter = regexp.MustCompile(`^[a-zA-Z., ]+$`).MatchString
 	if !IsLetter(s) {
 		return s, fmt.Errorf("name should only contain characters")
 	}

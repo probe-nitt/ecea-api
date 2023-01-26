@@ -340,8 +340,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.Error'
-      security:
-      - ApiKeyAuth: []
       summary: Get Podcast By Episode Number And Type
       tags:
       - Podcast
@@ -377,6 +375,9 @@ paths:
       description: Gets a podcast by type
       parameters:
       - description: Enter type
+        enum:
+        - GUEST_LECTURE
+        - CAREER_PATH
         in: path
         name: type
         required: true

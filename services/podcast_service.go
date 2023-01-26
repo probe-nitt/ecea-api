@@ -26,9 +26,9 @@ type PodcastService interface {
 	EditURL(podcastDetails models.PodcastRequest) error
 	EditDescription(podcastDetails models.PodcastRequest) error
 	DeletePodcast(podcastDetails models.PodcastRequest) error
-	GetPodcastByEpisodeNumberAndType(episode uint, podcastType string) (schemas.Podcast, error)
-	GetAllPodcasts() ([]schemas.Podcast, error)
-	GetPodcastByType(podcastType string) ([]schemas.Podcast, error)
+	GetPodcastByEpisodeNumberAndType(episode uint, podcastType string) (models.PodcastRequest, error)
+	GetAllPodcasts() ([]models.PodcastRequest, error)
+	GetPodcastByType(podcastType string) ([]models.PodcastRequest, error)
 }
 
 func NewPodcastService(repo repositories.PodcastRepository) PodcastService {
@@ -149,10 +149,10 @@ func (ps *podcastService) DeletePodcast(podcast models.PodcastRequest) error {
 	return ps.repo.DeletePodcast(dbPodcast.ID)
 }
 
-func (ps *podcastService) GetPodcastByEpisodeNumberAndType(episode uint, podcastType string) (schemas.Podcast, error) {
-	dbPodcast, err := ps.repo.FindPodcastByEpisodeNoAndType(episode, podcastType)
+func (ps *podcastService) GetPodcastByEpisodeNumberAndType(episode uint, podcastType string) (models.PodcastRequest, error) {
+	dbPodcast, err := ps.repo.GetPodcastByEpisodeNoAndType(episode, podcastType)
 	if err != nil {
-		return schemas.Podcast{}, err
+		return models.PodcastRequest{}, err
 	}
 	return dbPodcast, nil
 }
@@ -170,19 +170,19 @@ func (ps *podcastService) GetPodcastByName(podcastName string) (schemas.Podcast,
 	return dbPodcast, nil
 }
 
-func (ps *podcastService) GetAllPodcasts() ([]schemas.Podcast, error) {
+func (ps *podcastService) GetAllPodcasts() ([]models.PodcastRequest, error) {
 	dbPodcast, err := ps.repo.GetAllPodcasts()
 	if err != nil {
-		return []schemas.Podcast{}, err
+		return []models.PodcastRequest{}, err
 	}
 	return dbPodcast, nil
 
 }
 
-func (ps *podcastService) GetPodcastByType(podcastType string) ([]schemas.Podcast, error) {
+func (ps *podcastService) GetPodcastByType(podcastType string) ([]models.PodcastRequest, error) {
 	dbPodcast, err := ps.repo.GetPodcastByType(podcastType)
 	if err != nil {
-		return []schemas.Podcast{}, err
+		return []models.PodcastRequest{}, err
 	}
 	return dbPodcast, nil
 }

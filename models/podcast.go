@@ -6,6 +6,7 @@ type PodcastRequest struct {
 	MediaURL    string      `json:"mediaUrl" form:"mediaUrl"`
 	EpisodeNo   uint        `json:"episodeNo" form:"episodeNo" query:"episodeNo"`
 	Type        PodcastType `json:"type" form:"type" query:"type"`
+	ImageURL    string      `json:"image_url"`
 }
 
 type Podcasts struct {
