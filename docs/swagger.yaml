@@ -1,4 +1,13 @@
 definitions:
+  models.CategoryMaterials:
+    properties:
+      category:
+        type: string
+      subjects:
+        items:
+          $ref: '#/definitions/models.SubjectMaterial'
+        type: array
+    type: object
   models.Error:
     properties:
       code:
@@ -6,6 +15,13 @@ definitions:
         type: integer
       message:
         example: status
+        type: string
+    type: object
+  models.Links:
+    properties:
+      document_url:
+        type: string
+      name:
         type: string
     type: object
   models.MemberRoles:
@@ -63,6 +79,30 @@ definitions:
       message:
         type: string
     type: object
+  models.StudyMaterials:
+    properties:
+      document_url:
+        type: string
+      name:
+        type: string
+      subject:
+        type: string
+      subject_category:
+        type: string
+      subjectCode:
+        type: string
+    type: object
+  models.SubjectMaterial:
+    properties:
+      materials:
+        items:
+          $ref: '#/definitions/models.Links'
+        type: array
+      name:
+        type: string
+      subject_code:
+        type: string
+    type: object
 info:
   contact:
     email: probe.eceanitt@gmail.com
@@ -75,6 +115,237 @@ info:
   title: Probe Admin
   version: "1.0"
 paths:
+  /v1/studymaterial/addMaterial:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creates a new study material and adds to Database
+      parameters:
+      - description: Enter material name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Enter subject code
+        in: formData
+        name: code
+        required: true
+        type: string
+      - description: Upload Document
+        in: formData
+        name: document
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a study material
+      tags:
+      - StudyMaterial
+  /v1/studymaterial/addSubject:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creates a new subject and adds to Database
+      parameters:
+      - description: Enter subject name
+        in: formData
+        name: subject
+        required: true
+        type: string
+      - description: Enter subject code
+        in: formData
+        name: code
+        required: true
+        type: string
+      - description: Enter subject category
+        enum:
+        - DIGITAL ELECTRONICS
+        - ANALOG ELECTRONICS
+        - TELECOMMUNICATION
+        - COMMUNICATION CHANNELING
+        - SYSTEM DESIGN AND ARCHITECTURE
+        - BASIC ENGINEERING
+        - MATHEMATICS
+        - OTHERS
+        in: formData
+        name: category
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a subject
+      tags:
+      - StudyMaterial
+  /v1/studymaterial/delete/{name}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a study material along with its document and remove form
+        Database
+      parameters:
+      - description: Delete study material
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Deletes a study material
+      tags:
+      - StudyMaterial
+  /v1/studymaterial/edit/document:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update a document and update it on Database
+      parameters:
+      - description: Enter the name of material
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Edit Document
+        in: formData
+        name: document
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a study material's document
+      tags:
+      - StudyMaterial
+  /v1/studymaterial/get/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Fetches a study material and removes form database
+      parameters:
+      - description: Get study material
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.StudyMaterials'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a study material
+      tags:
+      - StudyMaterial
+  /v1/studymaterial/getall:
+    get:
+      consumes:
+      - application/json
+      description: Fetches all study materials belonging to every category from Database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CategoryMaterials'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all study materials from each category
+      tags:
+      - StudyMaterial
+  /v1/studymaterial/getcat/{category}:
+    get:
+      consumes:
+      - application/json
+      description: Fetches all study materials belonging to a category from Database
+      parameters:
+      - description: Get study material from category
+        enum:
+        - DIGITAL ELECTRONICS
+        - ANALOG ELECTRONICS
+        - TELECOMMUNICATION
+        - COMMUNICATION CHANNELING
+        - SYSTEM DESIGN AND ARCHITECTURE
+        - BASIC ENGINEERING
+        - MATHEMATICS
+        - OTHERS
+        in: path
+        name: category
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.StudyMaterials'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get study materials from a category
+      tags:
+      - StudyMaterial
   /v1/team/add:
     post:
       consumes:

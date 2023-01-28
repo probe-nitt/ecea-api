@@ -37,7 +37,7 @@ func NumericValidator(s string) (string, error) {
 func EmailValidator(s string) (string, error) {
 	var IsValid = regexp.MustCompile(`^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$`).MatchString
 	if !IsValid(s) {
-		return s, errors.New("Invalid Email format")
+		return s, errors.New(" Invalid Email format")
 	}
 	return s, nil
 }

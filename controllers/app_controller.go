@@ -8,9 +8,10 @@ import (
 )
 
 type AppController struct {
-	User interface{ UserController }
-	Team interface{ TeamController }
-	Seed interface{ SeedController }
+	User          interface{ UserController }
+	Team          interface{ TeamController }
+	Seed          interface{ SeedController }
+	StudyMaterial interface{ StudyMaterialController }
 }
 
 type seedController struct {
@@ -41,6 +42,11 @@ func (s *seedController) SeedDB() error {
 		log.Panic(err)
 		return err
 	}
-	log.Println(color.GreenString("Seeded Successfully"))
+	err = s.seed.StudyMaterialSeeder()
+	if err != nil {
+		log.Panic(err)
+		return err
+	}
+	log.Println(color.GreenString(" Seeded Successfully"))
 	return nil
 }
