@@ -29,10 +29,10 @@ services:
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     command: -p ${POSTGRES_PORT}
-    volumes:
-      - database:/data/postgres
-volumes:
-  database:
+#    volumes:
+#      - database:/data/postgres
+#volumes:
+#  database:
 
 # networks:
 #  default:

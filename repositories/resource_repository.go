@@ -13,6 +13,9 @@ type studyMaterialRepository struct {
 }
 
 type StudyMaterialRepository interface {
+	GetDocumentLinks(subID uint) ([]models.Links, error)
+	GetSubjectsByCategory(category string) ([]string, error)
+	GetSubjectStudyMaterial(subject string) (models.SubjectMaterial, error)
 	GetCategoryStudyMaterials(name string) ([]models.StudyMaterials, error)
 	GetAllCategories() ([]string, error)
 	FindStudyMaterialByName(name string) (models.StudyMaterials, error)
@@ -211,4 +214,44 @@ func (rr *studyMaterialRepository) GetAllCategories() ([]string, error) {
 		return nil, err
 	}
 	return allCategories, nil
+}
+
+func (rr *studyMaterialRepository) GetSubjectsByCategory(category string) ([]string, error) {
+	var categorySubjects []string
+	id, err := rr.GetSubjectCategoryID(category)
+	if err != nil {
+		return nil, err
+	}
+	if err := rr.db.Table("subjects").Select("subjects.name").Joins("JOIN subject_categories on subject_categories.name = ?", category).Where("subjects.subject_category_id = ?", id).Scan(&categorySubjects).Error; err != nil {
+		return nil, err
+	}
+	return categorySubjects, nil
+}
+
+func (rr *studyMaterialRepository) GetSubjectStudyMaterial(subject string) (models.SubjectMaterial, error) {
+	var subMaterial models.SubjectMaterial
+	var subjectCode string
+	if err := rr.db.Table("subjects").Select("subjects.subject_code").Where("subjects.name = ?", subject).Scan(&subjectCode).Error; err != nil {
+		return subMaterial, err
+	}
+	subMaterial.Name = subject
+	subMaterial.SubjectCode = subjectCode
+	subID, err := rr.GetSubjectID(subjectCode)
+	if err != nil {
+		return subMaterial, err
+	}
+	links, err1 := rr.GetDocumentLinks(subID)
+	if err1 != nil {
+		return subMaterial, err
+	}
+	subMaterial.Links = links
+	return subMaterial, nil
+}
+
+func (rr *studyMaterialRepository) GetDocumentLinks(subID uint) ([]models.Links, error) {
+	var links []models.Links
+	if err := rr.db.Table("study_materials").Select(`study_materials.name as name,CONCAT(?::text,'/static/documents','/',assets.name) as document_url`, config.Origin).Joins("JOIN assets on assets.id = study_materials.asset_id").Where("study_materials.subject_id = ?", subID).Scan(&links).Error; err != nil {
+		return nil, err
+	}
+	return links, nil
 }

@@ -5,7 +5,7 @@ definitions:
         type: string
       subjects:
         items:
-          $ref: '#/definitions/models.StudyMaterials'
+          $ref: '#/definitions/models.SubjectMaterial'
         type: array
     type: object
   models.Error:
@@ -15,6 +15,13 @@ definitions:
         type: integer
       message:
         example: status
+        type: string
+    type: object
+  models.Links:
+    properties:
+      document_url:
+        type: string
+      name:
         type: string
     type: object
   models.MemberRoles:
@@ -83,6 +90,17 @@ definitions:
       subject_category:
         type: string
       subjectCode:
+        type: string
+    type: object
+  models.SubjectMaterial:
+    properties:
+      materials:
+        items:
+          $ref: '#/definitions/models.Links'
+        type: array
+      name:
+        type: string
+      subject_code:
         type: string
     type: object
 info:

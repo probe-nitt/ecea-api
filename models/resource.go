@@ -15,8 +15,18 @@ type StudyMaterials struct {
 }
 
 type CategoryMaterials struct {
-	Category string           `json:"category"`
-	Material []StudyMaterials `json:"subjects"`
+	Category        string            `json:"category"`
+	SubjectMaterial []SubjectMaterial `json:"subjects"`
+}
+type SubjectMaterial struct {
+	Name        string  `json:"name"`
+	SubjectCode string  `json:"subject_code"`
+	Links       []Links `json:"materials"`
+}
+
+type Links struct {
+	Name        string `json:"name"`
+	DocumentURL string `json:"document_url"`
 }
 
 type SubjectCategory string

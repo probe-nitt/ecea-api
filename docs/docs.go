@@ -878,7 +878,7 @@ const docTemplate = `{
                 "subjects": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.StudyMaterials"
+                        "$ref": "#/definitions/models.SubjectMaterial"
                     }
                 }
             }
@@ -893,6 +893,17 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "status"
+                }
+            }
+        },
+        "models.Links": {
+            "type": "object",
+            "properties": {
+                "document_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -988,6 +999,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "subject_category": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SubjectMaterial": {
+            "type": "object",
+            "properties": {
+                "materials": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Links"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "subject_code": {
                     "type": "string"
                 }
             }

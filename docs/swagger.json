@@ -869,7 +869,7 @@
                 "subjects": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.StudyMaterials"
+                        "$ref": "#/definitions/models.SubjectMaterial"
                     }
                 }
             }
@@ -884,6 +884,17 @@
                 "message": {
                     "type": "string",
                     "example": "status"
+                }
+            }
+        },
+        "models.Links": {
+            "type": "object",
+            "properties": {
+                "document_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -979,6 +990,23 @@
                     "type": "string"
                 },
                 "subject_category": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SubjectMaterial": {
+            "type": "object",
+            "properties": {
+                "materials": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Links"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "subject_code": {
                     "type": "string"
                 }
             }

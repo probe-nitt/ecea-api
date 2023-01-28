@@ -147,13 +147,32 @@ func (rs *studyMaterialService) GetAllMaterials() ([]models.CategoryMaterials, e
 	}
 	var allMaterials []models.CategoryMaterials
 	var categoryMaterials models.CategoryMaterials
+	/*
+		for _, category := range allCategories {
+			categoryMaterials.Category = category
+			temp, err := rs.repo.GetCategoryStudyMaterials(category)
+			if err != nil {
+				return nil, err
+			}
+			categoryMaterials.Material = temp
+			allMaterials = append(allMaterials, categoryMaterials)
+		}
+	*/
 	for _, category := range allCategories {
-		categoryMaterials.Category = category
-		temp, err := rs.repo.GetCategoryStudyMaterials(category)
+		subjects, err := rs.repo.GetSubjectsByCategory(category)
 		if err != nil {
 			return nil, err
 		}
-		categoryMaterials.Material = temp
+		var subjectMaterialList []models.SubjectMaterial
+		for _, subject := range subjects {
+			materials, err := rs.repo.GetSubjectStudyMaterial(subject)
+			if err != nil {
+				return nil, err
+			}
+			subjectMaterialList = append(subjectMaterialList, materials)
+		}
+		categoryMaterials.Category = category
+		categoryMaterials.SubjectMaterial = subjectMaterialList
 		allMaterials = append(allMaterials, categoryMaterials)
 	}
 	return allMaterials, nil
